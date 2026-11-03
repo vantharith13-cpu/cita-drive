@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CITA Drive">
+  <meta name="theme-color" content="#0f172a">
+  <title>CITA Drive Tracker</title>
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3202/3202926.png">
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0; padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 20px) 16px;
+      background-color: #0f172a; color: #f8fafc;
+      display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between;
+    }
+    .header { text-align: center; margin-top: 10px; margin-bottom: 20px; }
+    .header h1 { font-size: 24px; color: #f97316; margin: 0 0 4px 0; font-weight: 800; }
+    .header p { font-size: 13px; color: #94a3b8; margin: 0; }
+    
+    .card {
+      background: #1e293b; border-radius: 24px;
+      padding: 24px 20px; border: 1px solid #334155;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      flex-grow: 1; display: flex; flex-direction: column; justify-content: center;
+    }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 6px; font-weight: 600; }
+    input {
+      width: 100%; padding: 14px; border-radius: 12px;
+      border: 1px solid #475569; background: #0f172a; color: #ffffff;
+      font-size: 16px; outline: none; transition: 0.2s;
+    }
+    input:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25); }
+    button {
+      width: 100%; padding: 16px; margin-top: 10px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: white; font-size: 16px; font-weight: 700; cursor: pointer;
+    }
+    button:active { transform: scale(0.97); }
+    button:disabled { background: #475569; opacity: 0.6; }
+    #status { margin-top: 14px; text-align: center; font-size: 14px; font-weight: 600; min-height: 20px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🚘 CITA Drive Tracker</h1>
+    <p>ប្រព័ន្ធកត់ត្រាដំណើរការយានយន្ត</p>
+  </div>
+
+  <div class="card">
+    <div class="form-group">
+      <label>ឈ្មោះអ្នកបើកបរ (Driver Name)</label>
+      <input type="text" id="driver" placeholder="ឧ. សុខ ជា">
+    </div>
+    <div class="form-group">
+      <label>ស្លាកលេខយានយន្ត (Plate Number)</label>
+      <input type="text" id="vehicle" placeholder="ឧ. 2ABC-1234">
+    </div>
+    <div class="form-group">
+      <label>កុងទ័រចាប់ផ្តើម (Start KM)</label>
+      <input type="number" id="startKm" placeholder="0">
+    </div>
+    <div class="form-group">
+      <label>កុងទ័របញ្ចប់ (End KM)</label>
+      <input type="number" id="endKm" placeholder="0">
+    </div>
+    <div class="form-group">
+      <label>ចំណាំផ្សេងៗ (Note)</label>
+      <input type="text" id="note" placeholder="ឧ. ចាក់សាំង 20$">
+    </div>
+    <button id="saveBtn" onclick="saveData()">កត់ត្រាទិន្នន័យ (Save Trip)</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    // ⚠️ ប្តូរ URL ខាងក្រោមទៅជា Web App URL របស់ Google Apps Script
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxfuzLhu7xempK3iB5zwWH67yH9Jo27y403LXgg9lkfMAfev9bz3nbrk_R2PiBHi41m/exec";
+
+    function saveData() {
+      const btn = document.getElementById('saveBtn');
+      const status = document.getElementById('status');
+      const driver = document.getElementById('driver').value;
+      const vehicle = document.getElementById('vehicle').value;
+      const startKm = document.getElementById('startKm').value;
+      const endKm = document.getElementById('endKm').value;
+      const note = document.getElementById('note').value;
+
+      if (!driver || !vehicle) {
+        status.style.color = '#ef4444';
+        status.innerText = "⚠️ សូមបញ្ចូលឈ្មោះ និងស្លាកលេខឡាន!";
+        return;
+      }
+
+      btn.disabled = true;
+      status.style.color = '#38bdf8';
+      status.innerText = "⏳ កំពុងរក្សាទុកទិន្នន័យ...";
+
+      const payload = { driver, vehicle, startKm, endKm, note };
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        status.style.color = '#4ade80';
+        status.innerText = "✅ កត់ត្រាទិន្នន័យជោគជ័យ!";
+        btn.disabled = false;
+        document.getElementById('startKm').value = '';
+        document.getElementById('endKm').value = '';
+        document.getElementById('note').value = '';
+      })
+      .catch(err => {
+        status.style.color = '#ef4444';
+        status.innerText = "❌ មានបញ្ហា ព្យាយាមម្តងទៀត";
+        btn.disabled = false;
+      });
+    }
+  </script>
+</body>
+</html>
