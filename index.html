@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-title" content="CITA Drive">
   <meta name="theme-color" content="#0f172a">
   <title>CITA Drive Tracker</title>
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3202/3202926.png">
+  <link rel="apple-touch-icon" href="logo.jpg">
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
@@ -18,6 +18,15 @@
       display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between;
     }
     .header { text-align: center; margin-top: 6px; margin-bottom: 12px; }
+    
+    .app-logo {
+      width: 85px;
+      height: 85px;
+      object-fit: contain;
+      margin-bottom: 6px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+    }
+
     .header h1 { font-size: 22px; color: #f97316; margin: 0 0 2px 0; font-weight: 800; }
     .header p { font-size: 12px; color: #94a3b8; margin: 0; }
     
@@ -41,6 +50,13 @@
       background: rgba(250, 204, 21, 0.1); padding: 6px; border-radius: 8px;
     }
 
+    .trip-summary-box {
+      background: #0f172a; border: 1px solid #38bdf8; border-radius: 12px;
+      padding: 12px; margin-bottom: 14px; font-size: 13px; line-height: 1.6;
+    }
+
+    .auto-km-info { font-size: 11px; color: #38bdf8; margin-top: 4px; font-weight: 500; }
+
     .form-group { margin-bottom: 12px; }
     label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600; }
     input, select {
@@ -49,30 +65,34 @@
       font-size: 15px; outline: none; transition: 0.2s;
     }
     input:focus, select:focus { border-color: #f97316; box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25); }
+    input:read-only { background: #1e293b; color: #38bdf8; font-weight: bold; border-color: #334155; }
     
     button.btn-primary {
       width: 100%; padding: 15px; margin-top: 8px; border-radius: 12px; border: none;
       background: linear-gradient(135deg, #ea580c, #f97316);
       color: white; font-size: 16px; font-weight: 700; cursor: pointer;
     }
+    button.btn-danger {
+      width: 100%; padding: 12px; margin-top: 8px; border-radius: 12px; border: none;
+      background: #ef4444; color: white; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
     button:active { transform: scale(0.98); }
     button:disabled { background: #475569; opacity: 0.6; }
-    #status { margin-top: 10px; text-align: center; font-size: 13px; font-weight: 600; min-height: 18px; }
 
-    #userRegisterView { display: none; }
+    #userRegisterView, #startTripView, #endTripView { display: none; }
   </style>
 </head>
 <body>
 
   <div class="header">
+    <img src="logo.jpg" alt="CITA Logo" class="app-logo" onerror="this.style.display='none';">
     <h1>🚘 CITA Drive</h1>
     <p>ប្រព័ន្ធកត់ត្រាកុងទ័រកងយានយន្ត</p>
   </div>
 
-  <!-- 1. ទំព័រ Register អ្នកប្រើប្រាស់ (បង្ហាញតែលើកដំបូង) -->
+  <!-- 1. ទំព័រ Register អ្នកប្រើប្រាស់ -->
   <div id="userRegisterView" class="card">
     <h3 style="margin-top:0; color:#f97316; font-size:16px; text-align:center;">👤 ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង)</h3>
-    <p style="font-size:12px; color:#94a3b8; text-align:center; margin-top:-6px;">បញ្ចូលឈ្មោះរបស់អ្នក ដើម្បីកុំឱ្យពិបាកវាយបញ្ចូលឡើងវិញពេលក្រោយ</p>
     <div class="form-group">
       <label>ឈ្មោះអ្នកបើកបរ (User Name)</label>
       <input type="text" id="regDriverName" placeholder="ឧ. សុខ ជា">
@@ -80,19 +100,18 @@
     <button class="btn-primary" onclick="registerUser()">រក្សាទុកឈ្មោះអ្នកប្រើប្រាស់</button>
   </div>
 
-  <!-- 2. ទំព័រកត់ត្រាទិន្នន័យ -->
-  <div id="tripView" class="card" style="display:none;">
-    
+  <!-- 2. ទំព័រ START (ពេលចេញដំណើរ) -->
+  <div id="startTripView" class="card">
     <div class="user-banner">
-      <div class="user-info" id="displayUser">👤 អ្នកប្រើប្រាស់: -</div>
+      <div class="user-info" id="displayUserStart">👤 អ្នកប្រើប្រាស់: -</div>
       <button class="btn-edit" onclick="resetUser()">ប្តូរ User</button>
     </div>
 
-    <div class="gps-status" id="gpsStatus">📍 កំពុងចាប់ទីតាំង GPS ដោយស្វ័យប្រវត្តិ...</div>
+    <div class="gps-status" id="gpsStatusStart">📍 កំពុងចាប់ទីតាំង GPS...</div>
 
     <div class="form-group">
-      <label>🚘 ជ្រើសរើសប្រភេทยានយន្ត (Vehicle)</label>
-      <select id="vehicleSelect">
+      <label>🚘 ជ្រើសរើសប្រភេทยានយន្ត</label>
+      <select id="vehicleSelect" onchange="fetchLastKm()">
         <option value="Honda Wave 1MP-9952">🛵 Honda Wave 1MP-9952 (ម៉ូតូ)</option>
         <option value="KIA 2AQ-4141">🚘 KIA 2AQ-4141 (ឡាន)</option>
         <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
@@ -105,99 +124,195 @@
       <input type="text" id="purpose" placeholder="ឧ. ចុះបេសកកម្ម / ដឹកទំនិញ">
     </div>
 
-    <div style="display:flex; gap:10px;">
-      <div class="form-group" style="flex:1;">
-        <label>▶️ កុងទ័រដើម (Start KM)</label>
-        <input type="number" id="startKm" placeholder="0">
-      </div>
-      <div class="form-group" style="flex:1;">
-        <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
-        <input type="number" id="endKm" placeholder="0">
-      </div>
+    <div class="form-group">
+      <label>▶️ កុងទ័រដើម (Start KM)</label>
+      <input type="number" id="startKm" placeholder="0">
+      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញពី Sheet...</div>
+    </div>
+
+    <button class="btn-primary" onclick="startTrip()">▶️ ចាប់ផ្តើមដំណើរ (START TRIP)</button>
+    <div id="statusStart" style="margin-top:10px; text-align:center; font-size:13px; color:#ef4444; font-weight:bold;"></div>
+  </div>
+
+  <!-- 3. ទំព័រ END (ពេលមកដល់វិញ) -->
+  <div id="endTripView" class="card">
+    <div class="user-banner">
+      <div class="user-info" id="displayUserEnd">👤 អ្នកប្រើប្រាស់: -</div>
+    </div>
+
+    <div class="gps-status" id="gpsStatusEnd">📍 កំពុងចាប់ទីតាំង GPS...</div>
+
+    <div class="trip-summary-box">
+      <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px;">🔴 កំពុងធ្វើដំណើរ (Trip in Progress)</div>
+      <div>🚘 យានយន្ត: <b id="sumVehicle" style="color:#f97316;">-</b></div>
+      <div>🎯 គោលបំណង: <b id="sumPurpose">-</b></div>
+      <div>▶️ កុងទ័រដើម: <b id="sumStartKm" style="color:#4ade80;">-</b> KM</div>
+      <div>⏱️ ម៉ោងចេញដំណើរ: <b id="sumStartTime">-</b></div>
     </div>
 
     <div class="form-group">
-      <label>⛽ បរិមាណចាក់សាំង/លីត្រ (បើមានចាក់ពេលបញ្ចប់)</label>
+      <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
+      <input type="number" id="endKm" placeholder="0">
+    </div>
+
+    <div class="form-group">
+      <label>⛽ បរិមាណចាក់សាំង/លីត្រ (បើមាន)</label>
       <input type="number" id="fuelLitres" placeholder="ឧ. 15 (ទុកទទេបើគ្មាន)">
     </div>
 
-    <button id="saveBtn" class="btn-primary" onclick="saveTripData()">START (កត់ត្រាទិន្នន័យ)</button>
-    <div id="status"></div>
+    <button id="saveBtn" class="btn-primary" onclick="endTrip()">⏹️ បញ្ចប់ដំណើរ & រក្សាទុក (END TRIP)</button>
+    <button class="btn-danger" onclick="cancelTrip()">❌ បោះបង់ដំណើរកម្សាន្តនេះ</button>
+    <div id="statusEnd" style="margin-top:10px; text-align:center; font-size:13px; font-weight:bold;"></div>
   </div>
 
   <script>
-    // ⚠️ ប្តូរ Link Web App របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ចូលត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzuo-wwxXVGNLtjmSNgCzxXO_YNMfwvRbY2ly3X7q_JskChTaROcn2hV_wVoFqdxAl9/exec";
+    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់បន្ទាត់ទី 140 នេះ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCzJWVK5SPetYeO4-g_j_UbwHOm6VeR7yNILqob0VQIwnERZYobxErogTMnGCkJbuR/exec";
     let currentLocation = "មិនទាន់ចាប់បានទីតាំង";
 
     window.onload = function() {
-      checkUserStatus();
+      checkAppStatus();
       initGPS();
     };
 
-    function checkUserStatus() {
+    function checkAppStatus() {
       const savedUser = localStorage.getItem('cita_user_driver');
-      if (savedUser) {
-        document.getElementById('userRegisterView').style.display = 'none';
-        document.getElementById('tripView').style.display = 'block';
-        document.getElementById('displayUser').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
-      } else {
-        document.getElementById('userRegisterView').style.display = 'block';
-        document.getElementById('tripView').style.display = 'none';
+      const activeTrip = localStorage.getItem('cita_active_trip');
+
+      if (!savedUser) {
+        showView('userRegisterView');
+        return;
       }
+
+      if (activeTrip) {
+        const tripData = JSON.parse(activeTrip);
+        document.getElementById('displayUserEnd').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
+        document.getElementById('sumVehicle').innerText = tripData.vehicle;
+        document.getElementById('sumPurpose').innerText = tripData.purpose;
+        document.getElementById('sumStartKm').innerText = tripData.startKm;
+        document.getElementById('sumStartTime').innerText = tripData.startTime;
+        showView('endTripView');
+      } else {
+        document.getElementById('displayUserStart').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
+        showView('startTripView');
+        fetchLastKm();
+      }
+    }
+
+    function showView(viewId) {
+      document.getElementById('userRegisterView').style.display = 'none';
+      document.getElementById('startTripView').style.display = 'none';
+      document.getElementById('endTripView').style.display = 'none';
+      document.getElementById(viewId).style.display = 'block';
     }
 
     function registerUser() {
       const name = document.getElementById('regDriverName').value.trim();
-      if (!name) {
-        alert("សូមបញ្ចូលឈ្មោះអ្នកប្រើប្រាស់!");
-        return;
-      }
+      if (!name) { alert("សូមបញ្ចូលឈ្មោះ!"); return; }
       localStorage.setItem('cita_user_driver', name);
-      checkUserStatus();
+      checkAppStatus();
     }
 
     function resetUser() {
       if (confirm("តើអ្នកចង់ប្តូរឈ្មោះអ្នកប្រើប្រាស់មែនទេ?")) {
         localStorage.removeItem('cita_user_driver');
-        checkUserStatus();
+        checkAppStatus();
       }
     }
 
+    function fetchLastKm() {
+      const vehicle = document.getElementById('vehicleSelect').value;
+      const startKmInput = document.getElementById('startKm');
+      const notice = document.getElementById('startKmNotice');
+
+      notice.innerText = "⏳ កំពុងទាញពី Sheet...";
+      startKmInput.value = "";
+      startKmInput.readOnly = false;
+
+      fetch(`${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.lastKm !== null && data.lastKm !== undefined) {
+            startKmInput.value = data.lastKm;
+            startKmInput.readOnly = true;
+            notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
+            notice.style.color = "#4ade80";
+          } else {
+            notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
+            notice.style.color = "#facc15";
+            startKmInput.readOnly = false;
+          }
+        })
+        .catch(err => {
+          notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបាន (អាចវាយបញ្ចូលដោយដៃ)";
+          notice.style.color = "#ef4444";
+          startKmInput.readOnly = false;
+        });
+    }
+
     function initGPS() {
-      const gpsElement = document.getElementById('gpsStatus');
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const lat = position.coords.latitude.toFixed(5);
-            const lng = position.coords.longitude.toFixed(5);
-            currentLocation = `${lat}, ${lng}`;
-            gpsElement.style.color = '#4ade80';
-            gpsElement.innerText = `📍 ទីតាំង GPS (Auto): ${currentLocation}`;
+          (pos) => {
+            currentLocation = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+            const txt = `📍 GPS (Auto): ${currentLocation}`;
+            document.getElementById('gpsStatusStart').innerText = txt;
+            document.getElementById('gpsStatusEnd').innerText = txt;
           },
-          (error) => {
-            gpsElement.style.color = '#f87171';
-            gpsElement.innerText = "📍 ពុំអាចចាប់ទីតាំងបាន (សូមបើក Location GPS)";
+          (err) => {
+            const txt = "📍 ពុំអាចចាប់ទីតាំងបាន (សូមបើក Location GPS)";
+            document.getElementById('gpsStatusStart').innerText = txt;
+            document.getElementById('gpsStatusEnd').innerText = txt;
           },
           { enableHighAccuracy: true, timeout: 10000 }
         );
       }
     }
 
-    function saveTripData() {
-      const btn = document.getElementById('saveBtn');
-      const status = document.getElementById('status');
-      
-      const driver = localStorage.getItem('cita_user_driver');
+    function startTrip() {
       const vehicle = document.getElementById('vehicleSelect').value;
       const purpose = document.getElementById('purpose').value.trim();
       const startKm = document.getElementById('startKm').value;
+      const statusErr = document.getElementById('statusStart');
+
+      if (!purpose || !startKm) {
+        statusErr.innerText = "⚠️ សូមបញ្ចូល គោលបំណង និង កុងទ័រដើម!";
+        return;
+      }
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('km-KH', { hour12: false });
+
+      const tripData = {
+        vehicle: vehicle,
+        purpose: purpose,
+        startKm: startKm,
+        startTime: timeStr,
+        startLocation: currentLocation
+      };
+
+      localStorage.setItem('cita_active_trip', JSON.stringify(tripData));
+      document.getElementById('purpose').value = '';
+      statusErr.innerText = '';
+      checkAppStatus();
+    }
+
+    function endTrip() {
+      const activeTrip = JSON.parse(localStorage.getItem('cita_active_trip'));
       const endKm = document.getElementById('endKm').value;
       const fuelLitres = document.getElementById('fuelLitres').value;
+      const status = document.getElementById('statusEnd');
+      const btn = document.getElementById('saveBtn');
 
-      if (!purpose || !startKm || !endKm) {
+      if (!endKm) {
         status.style.color = '#ef4444';
-        status.innerText = "⚠️ សូមបញ្ចូល គោលបំណង, កុងទ័រដើម និងកុងទ័របញ្ចប់!";
+        status.innerText = "⚠️ សូមបញ្ចូលកុងទ័របញ្ចប់!";
+        return;
+      }
+
+      if (Number(endKm) < Number(activeTrip.startKm)) {
+        status.style.color = '#ef4444';
+        status.innerText = "⚠️ កុងទ័របញ្ចប់ មិនអាចតូចជាងកុងទ័រដើមទេ!";
         return;
       }
 
@@ -206,13 +321,15 @@
       status.innerText = "⏳ កំពុងផ្ញើទិន្នន័យចូល Sheet...";
 
       const payload = {
-        driver: driver,
-        vehicle: vehicle,
-        purpose: purpose,
-        startKm: startKm,
+        driver: localStorage.getItem('cita_user_driver'),
+        vehicle: activeTrip.vehicle,
+        purpose: activeTrip.purpose,
+        startKm: activeTrip.startKm,
         endKm: endKm,
+        startTime: activeTrip.startTime,
         fuelLitres: fuelLitres,
-        location: currentLocation
+        startLocation: activeTrip.startLocation,
+        endLocation: currentLocation
       };
 
       fetch(SCRIPT_URL, {
@@ -223,18 +340,28 @@
       })
       .then(() => {
         status.style.color = '#4ade80';
-        status.innerText = `✅ កត់ត្រាចូល Tab Sheet (${vehicle}) ជោគជ័យ!`;
-        btn.disabled = false;
-        document.getElementById('purpose').value = '';
-        document.getElementById('startKm').value = '';
-        document.getElementById('endKm').value = '';
-        document.getElementById('fuelLitres').value = '';
+        status.innerText = "✅ រក្សាទុកទិន្នន័យចូល Sheet ជោគជ័យ!";
+        localStorage.removeItem('cita_active_trip');
+        setTimeout(() => {
+          btn.disabled = false;
+          document.getElementById('endKm').value = '';
+          document.getElementById('fuelLitres').value = '';
+          status.innerText = '';
+          checkAppStatus();
+        }, 1500);
       })
       .catch(err => {
         status.style.color = '#ef4444';
         status.innerText = "❌ មានបញ្ហា ព្យាយាមម្តងទៀត";
         btn.disabled = false;
       });
+    }
+
+    function cancelTrip() {
+      if (confirm("តើអ្នកប្រាកដជាចង់បោះបង់ដំណើរកម្សាន្តនេះមែនទេ?")) {
+        localStorage.removeItem('cita_active_trip');
+        checkAppStatus();
+      }
     }
   </script>
 </body>
