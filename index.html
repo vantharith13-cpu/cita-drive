@@ -6,17 +6,30 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CITA Drive">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#090d16">
   <title>CITA Drive Tracker</title>
   <link rel="apple-touch-icon" href="0. CITA - Logo (o).png">
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0; padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
-      background-color: #0f172a; color: #f8fafc;
-      display: flex; flex-direction: column; min-height: 100vh; justify-content: space-between;
+      margin: 0; 
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
+      /* 🌟 Ambient Tech Glow Background */
+      background-color: #080c14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.22) 0px, transparent 45%),
+        radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.18) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.6) 0px, transparent 100%);
+      background-attachment: fixed;
+      color: #f8fafc;
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh; 
+      justify-content: space-between;
     }
+
     .header { text-align: center; margin-top: 6px; margin-bottom: 12px; }
     
     .app-logo {
@@ -27,22 +40,37 @@
       background: #ffffff;
       border-radius: 50%;
       padding: 6px;
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(249, 115, 22, 0.35);
     }
 
-    .header h1 { font-size: 22px; color: #f97316; margin: 0 0 2px 0; font-weight: 800; }
-    .header p { font-size: 12px; color: #94a3b8; margin: 0; }
+    .header h1 { 
+      font-size: 24px; 
+      color: #f97316; 
+      margin: 0 0 2px 0; 
+      font-weight: 800; 
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 10px rgba(249, 115, 22, 0.3);
+    }
+    .header p { font-size: 12px; color: #94a3b8; margin: 0; font-weight: 500; }
     
+    /* 💎 Glassmorphic Card Style */
     .card {
-      background: #1e293b; border-radius: 20px;
-      padding: 18px 16px; border: 1px solid #334155;
-      box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.5);
+      background: rgba(30, 41, 59, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 18px 16px; 
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.6);
       margin-bottom: 12px;
     }
 
     .user-banner {
       display: flex; justify-content: space-between; align-items: center;
-      background: #0f172a; padding: 10px 14px; border-radius: 12px; border: 1px solid #334155;
+      background: rgba(15, 23, 42, 0.7); 
+      padding: 10px 14px; 
+      border-radius: 12px; 
+      border: 1px solid rgba(56, 189, 248, 0.2);
       margin-bottom: 14px;
     }
     .user-info { font-size: 13px; color: #38bdf8; font-weight: 700; }
@@ -50,37 +78,53 @@
 
     .gps-status {
       font-size: 11px; color: #facc15; text-align: center; margin-bottom: 12px;
-      background: rgba(250, 204, 21, 0.1); padding: 6px; border-radius: 8px;
+      background: rgba(250, 204, 21, 0.12); padding: 7px; border-radius: 8px;
+      border: 1px solid rgba(250, 204, 21, 0.2);
     }
 
     .trip-summary-box {
-      background: #0f172a; border: 1px solid #38bdf8; border-radius: 12px;
+      background: rgba(15, 23, 42, 0.8); 
+      border: 1px solid rgba(56, 189, 248, 0.3); 
+      border-radius: 12px;
       padding: 12px; margin-bottom: 14px; font-size: 13px; line-height: 1.6;
     }
 
     .auto-km-info { font-size: 11px; color: #38bdf8; margin-top: 4px; font-weight: 500; }
 
     .form-group { margin-bottom: 12px; }
-    label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 4px; font-weight: 600; }
+    label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 5px; font-weight: 600; }
+    
     input, select {
       width: 100%; padding: 12px; border-radius: 10px;
-      border: 1px solid #475569; background: #0f172a; color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15); 
+      background: rgba(15, 23, 42, 0.75); 
+      color: #ffffff;
       font-size: 15px; outline: none; transition: 0.2s;
     }
-    input:focus, select:focus { border-color: #f97316; box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.25); }
-    input:read-only { background: #1e293b; color: #38bdf8; font-weight: bold; border-color: #334155; }
+    input:focus, select:focus { 
+      border-color: #f97316; 
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.35); 
+    }
+    input:read-only { 
+      background: rgba(30, 41, 59, 0.9); 
+      color: #38bdf8; 
+      font-weight: bold; 
+      border-color: rgba(56, 189, 248, 0.3); 
+    }
     
     button.btn-primary {
       width: 100%; padding: 15px; margin-top: 8px; border-radius: 12px; border: none;
       background: linear-gradient(135deg, #ea580c, #f97316);
       color: white; font-size: 16px; font-weight: 700; cursor: pointer;
+      box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
     }
     button.btn-danger {
       width: 100%; padding: 12px; margin-top: 8px; border-radius: 12px; border: none;
-      background: #ef4444; color: white; font-size: 14px; font-weight: 600; cursor: pointer;
+      background: rgba(239, 68, 68, 0.85); color: white; font-size: 14px; font-weight: 600; cursor: pointer;
+      backdrop-filter: blur(4px);
     }
     button:active { transform: scale(0.98); }
-    button:disabled { background: #475569; opacity: 0.6; }
+    button:disabled { background: #475569; opacity: 0.6; box-shadow: none; }
 
     #userRegisterView, #startTripView, #endTripView { display: none; }
   </style>
@@ -127,245 +171,4 @@
       <input type="text" id="purpose" placeholder="ឧ. ចុះបេសកកម្ម / ដឹកទំនិញ">
     </div>
 
-    <div class="form-group">
-      <label>▶️ កុងទ័រដើម (Start KM)</label>
-      <input type="number" id="startKm" placeholder="0">
-      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញពី Sheet...</div>
-    </div>
-
-    <button class="btn-primary" onclick="startTrip()">▶️ ចាប់ផ្តើមដំណើរ (START TRIP)</button>
-    <div id="statusStart" style="margin-top:10px; text-align:center; font-size:13px; color:#ef4444; font-weight:bold;"></div>
-  </div>
-
-  <!-- 3. ទំព័រ END (ពេលមកដល់វិញ) -->
-  <div id="endTripView" class="card">
-    <div class="user-banner">
-      <div class="user-info" id="displayUserEnd">👤 អ្នកប្រើប្រាស់: -</div>
-    </div>
-
-    <div class="gps-status" id="gpsStatusEnd">📍 កំពុងចាប់ទីតាំង GPS...</div>
-
-    <div class="trip-summary-box">
-      <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px;">🔴 កំពុងធ្វើដំណើរ (Trip in Progress)</div>
-      <div>🚘 យានយន្ត: <b id="sumVehicle" style="color:#f97316;">-</b></div>
-      <div>🎯 គោលបំណង: <b id="sumPurpose">-</b></div>
-      <div>▶️ កុងទ័រដើម: <b id="sumStartKm" style="color:#4ade80;">-</b> KM</div>
-      <div>⏱️ ម៉ោងចេញដំណើរ: <b id="sumStartTime">-</b></div>
-    </div>
-
-    <div class="form-group">
-      <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
-      <input type="number" id="endKm" placeholder="0">
-    </div>
-
-    <div class="form-group">
-      <label>⛽ បរិមាណចាក់សាំង/លីត្រ (បើមាន)</label>
-      <input type="number" id="fuelLitres" placeholder="ឧ. 15 (ទុកទទេបើគ្មាន)">
-    </div>
-
-    <button id="saveBtn" class="btn-primary" onclick="endTrip()">⏹️ បញ្ចប់ដំណើរ & រក្សាទុក (END TRIP)</button>
-    <button class="btn-danger" onclick="cancelTrip()">❌ បោះបង់ការធ្វើដំណើរនេះ</button>
-    <div id="statusEnd" style="margin-top:10px; text-align:center; font-size:13px; font-weight:bold;"></div>
-  </div>
-
-  <script>
-    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់នេះ
-    const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
-    let currentLocation = "មិនទាន់ចាប់បានទីតាំង";
-
-    window.onload = function() {
-      checkAppStatus();
-      initGPS();
-    };
-
-    function checkAppStatus() {
-      const savedUser = localStorage.getItem('cita_user_driver');
-      const activeTrip = localStorage.getItem('cita_active_trip');
-
-      if (!savedUser) {
-        showView('userRegisterView');
-        return;
-      }
-
-      if (activeTrip) {
-        const tripData = JSON.parse(activeTrip);
-        document.getElementById('displayUserEnd').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
-        document.getElementById('sumVehicle').innerText = tripData.vehicle;
-        document.getElementById('sumPurpose').innerText = tripData.purpose;
-        document.getElementById('sumStartKm').innerText = tripData.startKm;
-        document.getElementById('sumStartTime').innerText = tripData.startTime;
-        showView('endTripView');
-      } else {
-        document.getElementById('displayUserStart').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
-        showView('startTripView');
-        fetchLastKm();
-      }
-    }
-
-    function showView(viewId) {
-      document.getElementById('userRegisterView').style.display = 'none';
-      document.getElementById('startTripView').style.display = 'none';
-      document.getElementById('endTripView').style.display = 'none';
-      document.getElementById(viewId).style.display = 'block';
-    }
-
-    function registerUser() {
-      const name = document.getElementById('regDriverName').value.trim();
-      if (!name) { alert("សូមបញ្ចូលឈ្មោះ!"); return; }
-      localStorage.setItem('cita_user_driver', name);
-      checkAppStatus();
-    }
-
-    function resetUser() {
-      if (confirm("តើអ្នកចង់ប្តូរឈ្មោះអ្នកប្រើប្រាស់មែនទេ?")) {
-        localStorage.removeItem('cita_user_driver');
-        checkAppStatus();
-      }
-    }
-
-    function fetchLastKm() {
-      const vehicle = document.getElementById('vehicleSelect').value;
-      const startKmInput = document.getElementById('startKm');
-      const notice = document.getElementById('startKmNotice');
-
-      notice.innerText = "⏳ កំពុងទាញពី Sheet...";
-      startKmInput.value = "";
-      startKmInput.readOnly = false;
-
-      fetch(`${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.lastKm !== null && data.lastKm !== undefined) {
-            startKmInput.value = data.lastKm;
-            startKmInput.readOnly = true;
-            notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
-            notice.style.color = "#4ade80";
-          } else {
-            notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
-            notice.style.color = "#facc15";
-            startKmInput.readOnly = false;
-          }
-        })
-        .catch(err => {
-          notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបាន (អាចវាយបញ្ចូលដោយដៃ)";
-          notice.style.color = "#ef4444";
-          startKmInput.readOnly = false;
-        });
-    }
-
-    function initGPS() {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            currentLocation = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-            const txt = `📍 GPS (Auto): ${currentLocation}`;
-            document.getElementById('gpsStatusStart').innerText = txt;
-            document.getElementById('gpsStatusEnd').innerText = txt;
-          },
-          (err) => {
-            const txt = "📍 ពុំអាចចាប់ទីតាំងបាន (សូមបើក Location GPS)";
-            document.getElementById('gpsStatusStart').innerText = txt;
-            document.getElementById('gpsStatusEnd').innerText = txt;
-          },
-          { enableHighAccuracy: true, timeout: 10000 }
-        );
-      }
-    }
-
-    function startTrip() {
-      const vehicle = document.getElementById('vehicleSelect').value;
-      const purpose = document.getElementById('purpose').value.trim();
-      const startKm = document.getElementById('startKm').value;
-      const statusErr = document.getElementById('statusStart');
-
-      if (!purpose || !startKm) {
-        statusErr.innerText = "⚠️ សូមបញ្ចូល គោលបំណង និង កុងទ័រដើម!";
-        return;
-      }
-
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('km-KH', { hour12: false });
-
-      const tripData = {
-        vehicle: vehicle,
-        purpose: purpose,
-        startKm: startKm,
-        startTime: timeStr,
-        startLocation: currentLocation
-      };
-
-      localStorage.setItem('cita_active_trip', JSON.stringify(tripData));
-      document.getElementById('purpose').value = '';
-      statusErr.innerText = '';
-      checkAppStatus();
-    }
-
-    function endTrip() {
-      const activeTrip = JSON.parse(localStorage.getItem('cita_active_trip'));
-      const endKm = document.getElementById('endKm').value;
-      const fuelLitres = document.getElementById('fuelLitres').value;
-      const status = document.getElementById('statusEnd');
-      const btn = document.getElementById('saveBtn');
-
-      if (!endKm) {
-        status.style.color = '#ef4444';
-        status.innerText = "⚠️ សូមបញ្ចូលកុងទ័របញ្ចប់!";
-        return;
-      }
-
-      if (Number(endKm) < Number(activeTrip.startKm)) {
-        status.style.color = '#ef4444';
-        status.innerText = "⚠️ កុងទ័របញ្ចប់ មិនអាចតូចជាងកុងទ័រដើមទេ!";
-        return;
-      }
-
-      btn.disabled = true;
-      status.style.color = '#38bdf8';
-      status.innerText = "⏳ កំពុងផ្ញើទិន្នន័យចូល Sheet...";
-
-      const payload = {
-        driver: localStorage.getItem('cita_user_driver'),
-        vehicle: activeTrip.vehicle,
-        purpose: activeTrip.purpose,
-        startKm: activeTrip.startKm,
-        endKm: endKm,
-        startTime: activeTrip.startTime,
-        fuelLitres: fuelLitres,
-        startLocation: activeTrip.startLocation,
-        endLocation: currentLocation
-      };
-
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      })
-      .then(() => {
-        status.style.color = '#4ade80';
-        status.innerText = "✅ រក្សាទុកទិន្នន័យចូល Sheet ជោគជ័យ!";
-        localStorage.removeItem('cita_active_trip');
-        setTimeout(() => {
-          btn.disabled = false;
-          document.getElementById('endKm').value = '';
-          document.getElementById('fuelLitres').value = '';
-          status.innerText = '';
-          checkAppStatus();
-        }, 1500);
-      })
-      .catch(err => {
-        status.style.color = '#ef4444';
-        status.innerText = "❌ មានបញ្ហា ព្យាយាមម្តងទៀត";
-        btn.disabled = false;
-      });
-    }
-
-    function cancelTrip() {
-      if (confirm("តើអ្នកប្រាកដជាចង់បោះបង់ការធ្វើដំណើរនេះមែនទេ?")) {
-        localStorage.removeItem('cita_active_trip');
-        checkAppStatus();
-      }
-    }
-  </script>
-</body>
-</html>
+    <div class="form-
