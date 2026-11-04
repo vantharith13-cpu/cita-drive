@@ -23,8 +23,11 @@
       width: 85px;
       height: 85px;
       object-fit: contain;
-      margin-bottom: 6px;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+      margin-bottom: 8px;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 6px;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
     }
 
     .header h1 { font-size: 22px; color: #f97316; margin: 0 0 2px 0; font-weight: 800; }
@@ -167,7 +170,7 @@
 
   <script>
     // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCzJWVK5SPetYeO4-g_j_UbwHOm6VeR7yNILqob0VQIwnERZYobxErogTMnGCkJbuR/exec";
+    const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
     let currentLocation = "មិនទាន់ចាប់បានទីតាំង";
 
     window.onload = function() {
