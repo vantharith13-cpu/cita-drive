@@ -16,14 +16,14 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0; 
       padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
-      /* 🌟 Deep Cyberpunk Gradient Background */
+      /* 🌟 Cyberpunk Ambient Background */
       background: linear-gradient(160deg, #0d0e1b 0%, #1a103c 40%, #0b132b 100%);
       background-attachment: fixed;
       color: #f8fafc;
       display: flex; 
       flex-direction: column; 
       min-height: 100vh; 
-      justify-content: flex-start;
+      justify-content: space-between;
     }
 
     .header { text-align: center; margin-top: 6px; margin-bottom: 12px; }
@@ -124,8 +124,7 @@
     button:active { transform: scale(0.98); }
     button:disabled { background: #475569; opacity: 0.6; box-shadow: none; }
 
-    /* បិទតែទំព័រ Start និង End ប៉ុណ្ណោះ ទុកទំព័រដំបូងឱ្យទាញចេញជានិច្ច */
-    #startTripView, #endTripView { display: none; }
+    #userRegisterView, #startTripView, #endTripView { display: none; }
   </style>
 </head>
 <body>
@@ -158,10 +157,10 @@
     <div class="form-group">
       <label>🚘 ជ្រើសរើសប្រភេทยានយន្ត</label>
       <select id="vehicleSelect" onchange="fetchLastKm()">
-        <option value="Honda Wave 1MP-9952">🛵 Honda Wave 1MP-9952 (ម៉ូតូ)</option>
-        <option value="KIA 2AQ-4141">🚘 KIA 2AQ-4141 (ឡាន)</option>
-        <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
         <option value="Ford 2CJ-3946">🚘 Ford 2CJ-3946 (ឡាន)</option>
+        <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
+        <option value="KIA 2AQ-4141">🚘 KIA 2AQ-4141 (ឡាន)</option>
+        <option value="Honda Wave 1MP-9952">🛵 Honda Wave 1MP-9952 (ម៉ូតូ)</option>
       </select>
     </div>
 
@@ -212,107 +211,203 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJFzQa_hG5kbsnqfnne-P1tztc-uaOIwq5uGLeQ671yHgs5qg5dnRi16KsT6VnWqFU/exec";
+    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់នេះ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyh1nVo49KfL_c05Z4NE85fbHUI9JTnpTQyhQXIZrX7vrueXWB1PQnwblAtG75fn9E/exec";
     let currentLocation = "មិនទាន់ចាប់បានទីតាំង";
 
-    function getSafe(key) {
-      try { return localStorage.getItem(key); } catch(e) { return null; }
-    }
-    function setSafe(key, val) {
-      try { localStorage.setItem(key, val); } catch(e) {}
-    }
-    function removeSafe(key) {
-      try { localStorage.removeItem(key); } catch(e) {}
-    }
+    window.onload = function() {
+      checkAppStatus();
+      initGPS();
+    };
 
     function checkAppStatus() {
-      try {
-        const savedUser = getSafe('cita_user_driver');
-        const activeTrip = getSafe('cita_active_trip');
+      const savedUser = localStorage.getItem('cita_user_driver');
+      const activeTrip = localStorage.getItem('cita_active_trip');
 
-        if (!savedUser) {
-          showView('userRegisterView');
-          return;
-        }
-
-        if (activeTrip) {
-          const tripData = JSON.parse(activeTrip);
-          document.getElementById('displayUserEnd').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
-          document.getElementById('sumVehicle').innerText = tripData.vehicle;
-          document.getElementById('sumPurpose').innerText = tripData.purpose;
-          document.getElementById('sumStartKm').innerText = tripData.startKm;
-          document.getElementById('sumStartTime').innerText = tripData.startTime;
-          showView('endTripView');
-        } else {
-          document.getElementById('displayUserStart').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
-          showView('startTripView');
-          fetchLastKm();
-        }
-      } catch(err) {
+      if (!savedUser) {
         showView('userRegisterView');
+        return;
+      }
+
+      if (activeTrip) {
+        const tripData = JSON.parse(activeTrip);
+        document.getElementById('displayUserEnd').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
+        document.getElementById('sumVehicle').innerText = tripData.vehicle;
+        document.getElementById('sumPurpose').innerText = tripData.purpose;
+        document.getElementById('sumStartKm').innerText = tripData.startKm;
+        document.getElementById('sumStartTime').innerText = tripData.startTime;
+        showView('endTripView');
+      } else {
+        document.getElementById('displayUserStart').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
+        showView('startTripView');
+        fetchLastKm();
       }
     }
 
     function showView(viewId) {
-      const v1 = document.getElementById('userRegisterView');
-      const v2 = document.getElementById('startTripView');
-      const v3 = document.getElementById('endTripView');
-      if (v1) v1.style.display = 'none';
-      if (v2) v2.style.display = 'none';
-      if (v3) v3.style.display = 'none';
-      const target = document.getElementById(viewId);
-      if (target) target.style.display = 'block';
+      document.getElementById('userRegisterView').style.display = 'none';
+      document.getElementById('startTripView').style.display = 'none';
+      document.getElementById('endTripView').style.display = 'none';
+      document.getElementById(viewId).style.display = 'block';
     }
 
     function registerUser() {
-      const input = document.getElementById('regDriverName');
-      if (!input) return;
-      const name = input.value.trim();
+      const name = document.getElementById('regDriverName').value.trim();
       if (!name) { alert("សូមបញ្ចូលឈ្មោះ!"); return; }
-      setSafe('cita_user_driver', name);
+      localStorage.setItem('cita_user_driver', name);
       checkAppStatus();
     }
 
     function resetUser() {
       if (confirm("តើអ្នកចង់ប្តូរឈ្មោះអ្នកប្រើប្រាស់មែនទេ?")) {
-        removeSafe('cita_user_driver');
+        localStorage.removeItem('cita_user_driver');
         checkAppStatus();
       }
     }
 
     function fetchLastKm() {
-      const select = document.getElementById('vehicleSelect');
-      if (!select) return;
-      const vehicle = select.value;
+      const vehicle = document.getElementById('vehicleSelect').value;
       const startKmInput = document.getElementById('startKm');
       const notice = document.getElementById('startKmNotice');
 
-      if (notice) notice.innerText = "⏳ កំពុងទាញពី Sheet...";
-      if (startKmInput) {
-        startKmInput.value = "";
-        startKmInput.readOnly = false;
-      }
+      notice.innerText = "⏳ កំពុងទាញពី Sheet...";
+      startKmInput.value = "";
+      startKmInput.readOnly = false;
 
       fetch(`${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}`)
         .then(res => res.json())
         .then(data => {
           if (data && data.lastKm !== null && data.lastKm !== undefined) {
-            if (startKmInput) {
-              startKmInput.value = data.lastKm;
-              startKmInput.readOnly = true;
-            }
-            if (notice) {
-              notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
-              notice.style.color = "#4ade80";
-            }
+            startKmInput.value = data.lastKm;
+            startKmInput.readOnly = true;
+            notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
+            notice.style.color = "#4ade80";
           } else {
-            if (notice) {
-              notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
-              notice.style.color = "#facc15";
-            }
-            if (startKmInput) startKmInput.readOnly = false;
+            notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
+            notice.style.color = "#facc15";
+            startKmInput.readOnly = false;
           }
         })
         .catch(err => {
-          if (notice) {
-            notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបានទេ
+          notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបាន (អាចវាយបញ្ចូលដោយដៃ)";
+          notice.style.color = "#ef4444";
+          startKmInput.readOnly = false;
+        });
+    }
+
+    function initGPS() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            currentLocation = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+            const txt = `📍 GPS (Auto): ${currentLocation}`;
+            document.getElementById('gpsStatusStart').innerText = txt;
+            document.getElementById('gpsStatusEnd').innerText = txt;
+          },
+          (err) => {
+            const txt = "📍 ពុំអាចចាប់ទីតាំងបាន (សូមបើក Location GPS)";
+            document.getElementById('gpsStatusStart').innerText = txt;
+            document.getElementById('gpsStatusEnd').innerText = txt;
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      }
+    }
+
+    function startTrip() {
+      const vehicle = document.getElementById('vehicleSelect').value;
+      const purpose = document.getElementById('purpose').value.trim();
+      const startKm = document.getElementById('startKm').value;
+      const statusErr = document.getElementById('statusStart');
+
+      if (!purpose || !startKm) {
+        statusErr.innerText = "⚠️ សូមបញ្ចូល គោលបំណង និង កុងទ័រដើម!";
+        return;
+      }
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('km-KH', { hour12: false });
+
+      const tripData = {
+        vehicle: vehicle,
+        purpose: purpose,
+        startKm: startKm,
+        startTime: timeStr,
+        startLocation: currentLocation
+      };
+
+      localStorage.setItem('cita_active_trip', JSON.stringify(tripData));
+      document.getElementById('purpose').value = '';
+      statusErr.innerText = '';
+      checkAppStatus();
+    }
+
+    function endTrip() {
+      const activeTrip = JSON.parse(localStorage.getItem('cita_active_trip'));
+      const endKm = document.getElementById('endKm').value;
+      const fuelLitres = document.getElementById('fuelLitres').value;
+      const status = document.getElementById('statusEnd');
+      const btn = document.getElementById('saveBtn');
+
+      if (!endKm) {
+        status.style.color = '#ef4444';
+        status.innerText = "⚠️ សូមបញ្ចូលកុងទ័របញ្ចប់!";
+        return;
+      }
+
+      if (Number(endKm) < Number(activeTrip.startKm)) {
+        status.style.color = '#ef4444';
+        status.innerText = "⚠️ កុងទ័របញ្ចប់ មិនអាចតូចជាងកុងទ័រដើមទេ!";
+        return;
+      }
+
+      btn.disabled = true;
+      status.style.color = '#38bdf8';
+      status.innerText = "⏳ កំពុងផ្ញើទិន្នន័យចូល Sheet...";
+
+      const payload = {
+        driver: localStorage.getItem('cita_user_driver'),
+        vehicle: activeTrip.vehicle,
+        purpose: activeTrip.purpose,
+        startKm: activeTrip.startKm,
+        endKm: endKm,
+        startTime: activeTrip.startTime,
+        fuelLitres: fuelLitres,
+        startLocation: activeTrip.startLocation,
+        endLocation: currentLocation
+      };
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        status.style.color = '#4ade80';
+        status.innerText = "✅ រក្សាទុកទិន្នន័យចូល Sheet ជោគជ័យ!";
+        localStorage.removeItem('cita_active_trip');
+        setTimeout(() => {
+          btn.disabled = false;
+          document.getElementById('endKm').value = '';
+          document.getElementById('fuelLitres').value = '';
+          status.innerText = '';
+          checkAppStatus();
+        }, 1500);
+      })
+      .catch(err => {
+        status.style.color = '#ef4444';
+        status.innerText = "❌ មានបញ្ហា ព្យាយាមម្តងទៀត";
+        btn.disabled = false;
+      });
+    }
+
+    function cancelTrip() {
+      if (confirm("តើអ្នកប្រាកដជាចង់បោះបង់ការធ្វើដំណើរនេះមែនទេ?")) {
+        localStorage.removeItem('cita_active_trip');
+        checkAppStatus();
+      }
+    }
+  </script>
+</body>
+</html>
