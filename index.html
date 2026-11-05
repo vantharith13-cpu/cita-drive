@@ -132,12 +132,12 @@
   <div class="header">
     <img src="0. CITA - Logo (o).png" alt="CITA Logo" class="app-logo" onerror="this.style.display='none';">
     <h1>🚘 CITA Drive</h1>
-    <p>ប្រព័ន្ធកត់ត្រាកុងទ័រកងយានយន្ត</p>
+    <p>ប្រព័ន្ធកត់ត្រាការប្រើប្រាស់យានយន្ត</p>
   </div>
 
   <!-- 1. ទំព័រ Register អ្នកប្រើប្រាស់ -->
   <div id="userRegisterView" class="card">
-    <h3 style="margin-top:0; color:#f97316; font-size:16px; text-align:center;">👤 ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង)</h3>
+    <h3 style="margin-top:0; color:#f97316; font-size:16px; text-align:center;">👤 ចុះឈ្មោះចូលប្រើប្រាស់ (លើកដំបូង)</h3>
     <div class="form-group">
       <label>ឈ្មោះអ្នកបើកបរ (User Name)</label>
       <input type="text" id="regDriverName" placeholder="ឧ. សុខ ជា">
@@ -155,7 +155,7 @@
     <div class="gps-status" id="gpsStatusStart">📍 កំពុងចាប់ទីតាំង GPS...</div>
 
     <div class="form-group">
-      <label>🚘 ជ្រើសរើសប្រភេทยានយន្ត</label>
+      <label>🚘 ជ្រើសរើសប្រភេទយន្ត</label>
       <select id="vehicleSelect" onchange="fetchLastKm()">
         <option value="Ford 2CJ-3946">🚘 Ford 2CJ-3946 (ឡាន)</option>
         <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
@@ -172,7 +172,7 @@
     <div class="form-group">
       <label>▶️ កុងទ័រដើម (Start KM)</label>
       <input type="number" id="startKm" placeholder="0">
-      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញពី Sheet...</div>
+      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញទិន្នន័យ</div>
     </div>
 
     <button class="btn-primary" onclick="startTrip()">▶️ ចាប់ផ្តើមដំណើរ (START TRIP)</button>
@@ -283,7 +283,7 @@
             notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
             notice.style.color = "#4ade80";
           } else {
-            notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
+            notice.innerText = "💡 មិនទាន់មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
             notice.style.color = "#facc15";
             startKmInput.readOnly = false;
           }
