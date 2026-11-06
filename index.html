@@ -25,7 +25,6 @@
       justify-content: space-between;
     }
 
-    /* 🌟 Header Flex Container (Logo ខាងឆ្វេង | User ខាងស្តាំ) */
     .top-header {
       display: flex;
       justify-content: space-between;
@@ -62,7 +61,6 @@
       font-weight: 500; 
     }
 
-    /* 👤 User Box នៅខាងស្តាំ */
     .header-right {
       display: flex;
       align-items: center;
@@ -92,7 +90,6 @@
       white-space: nowrap;
     }
     
-    /* Card Container */
     .card {
       background: rgba(22, 27, 46, 0.8);
       backdrop-filter: blur(20px);
@@ -113,7 +110,6 @@
 
     .auto-km-info { font-size: 11px; color: #38bdf8; margin-top: 5px; font-weight: 500; }
 
-    /* Form Layout Standardized */
     .form-group { margin-bottom: 14px; }
     label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; font-weight: 600; }
     
@@ -163,7 +159,6 @@
 </head>
 <body>
 
-  <!-- Top Header -->
   <div class="top-header">
     <div class="header-left">
       <img src="0. CITA - Logo (o).png" alt="CITA Logo" class="app-logo" onerror="this.style.display='none';">
@@ -191,7 +186,7 @@
   <!-- 2. ទំព័រ START (ពេលចេញដំណើរ) -->
   <div id="startTripView" class="card">
     <div class="form-group">
-      <label>🚘 ជ្រើសរើសប្រភេทยានយន្ត</label>
+      <label>🚘 ជ្រើសរើសប្រភេទយានយន្ត</label>
       <select id="vehicleSelect" onchange="fetchLastKm()">
         <option value="Ford 2CJ-3946">🚘 Ford 2CJ-3946 (ឡាន)</option>
         <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
@@ -240,8 +235,8 @@
   </div>
 
   <script>
-    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script ត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby76Uioto-cKj4eFI-lrHWsdfNqKIjmoBlu-xgr_tc-G5EqputIc1Aj-_mffMbLCWbT/exec";
+    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់នេះ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_8F5v2eTGFtbBjWq3_NzDHF66ejLdSNDf6jcjh_M5vvsJBRRjjw9rvBHdhZxiH2RK/exec";
 
     window.onload = function() {
       checkAppStatus();
