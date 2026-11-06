@@ -186,7 +186,7 @@
   <!-- 2. ទំព័រ START (ពេលចេញដំណើរ) -->
   <div id="startTripView" class="card">
     <div class="form-group">
-      <label>🚘 ជ្រើសរើសប្រភេទយានយន្ត</label>
+      <label>🚘 សូមជ្រើសរើសប្រភេទយានយន្ត</label>
       <select id="vehicleSelect" onchange="fetchLastKm()">
         <option value="Ford 2CJ-3946">🚘 Ford 2CJ-3946 (ឡាន)</option>
         <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
@@ -315,7 +315,7 @@
           }
         })
         .catch(err => {
-          notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបាន (អាចវាយបញ្ចូលដោយដៃ)";
+          notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបាន (សូមវាយបញ្ចូលដោយដៃ)";
           notice.style.color = "#ef4444";
           startKmInput.readOnly = false;
         });
