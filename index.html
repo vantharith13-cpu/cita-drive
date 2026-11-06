@@ -16,7 +16,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0; 
       padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
-      /* 🌟 Cyberpunk Ambient Background */
       background: linear-gradient(160deg, #0d0e1b 0%, #1a103c 40%, #0b132b 100%);
       background-attachment: fixed;
       color: #f8fafc;
@@ -26,100 +25,135 @@
       justify-content: space-between;
     }
 
-    .header { text-align: center; margin-top: 6px; margin-bottom: 12px; }
-    
-    /* 🔥 Neon Ring Logo Style */
-    .app-logo {
-      width: 90px;
-      height: 90px;
-      object-fit: contain;
-      margin-bottom: 8px;
-      background: #ffffff;
-      border-radius: 50%;
-      padding: 6px;
-      border: 3px solid #f97316;
-      box-shadow: 0 0 20px rgba(249, 115, 22, 0.6), inset 0 0 10px rgba(0,0,0,0.1);
+    /* 🌟 Header Flex Container (Logo ខាងឆ្វេង | User ខាងស្តាំ) */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      margin-bottom: 16px;
+      gap: 10px;
     }
 
-    .header h1 { 
-      font-size: 24px; 
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .app-logo {
+      width: 55px;
+      height: 55px;
+      object-fit: contain;
+    }
+
+    .header-titles h1 { 
+      font-size: 18px; 
       color: #f97316; 
-      margin: 0 0 2px 0; 
+      margin: 0; 
       font-weight: 800; 
       letter-spacing: 0.5px;
-      text-shadow: 0 2px 12px rgba(249, 115, 22, 0.4);
+      text-shadow: 0 2px 10px rgba(249, 115, 22, 0.4);
     }
-    .header p { font-size: 12px; color: #a5b4fc; margin: 0; font-weight: 500; }
+    .header-titles p { 
+      font-size: 11px; 
+      color: #a5b4fc; 
+      margin: 2px 0 0 0; 
+      font-weight: 500; 
+    }
+
+    /* 👤 User Box នៅខាងស្តាំ */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(13, 14, 27, 0.85);
+      padding: 6px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      height: 55px;
+    }
+
+    .user-info-header {
+      font-size: 12px;
+      color: #38bdf8;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .btn-edit-header {
+      background: #334155;
+      color: #cbd5e1;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
     
-    /* 💎 Modern Glassmorphic Card */
+    /* Card Container */
     .card {
-      background: rgba(22, 27, 46, 0.75);
+      background: rgba(22, 27, 46, 0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 20px;
+      border-radius: 18px;
       padding: 18px 16px; 
       border: 1px solid rgba(165, 180, 252, 0.15);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       margin-bottom: 12px;
     }
 
-    .user-banner {
-      display: flex; justify-content: space-between; align-items: center;
-      background: rgba(13, 14, 27, 0.8); 
-      padding: 10px 14px; 
-      border-radius: 12px; 
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      margin-bottom: 14px;
-    }
-    .user-info { font-size: 13px; color: #38bdf8; font-weight: 700; }
-    .btn-edit { background: #334155; color: #cbd5e1; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; }
-
-    .gps-status {
-      font-size: 11px; color: #facc15; text-align: center; margin-bottom: 12px;
-      background: rgba(250, 204, 21, 0.12); padding: 7px; border-radius: 8px;
-      border: 1px solid rgba(250, 204, 21, 0.2);
-    }
-
     .trip-summary-box {
-      background: rgba(13, 14, 27, 0.85); 
-      border: 1px solid rgba(56, 189, 248, 0.35); 
+      background: rgba(13, 14, 27, 0.9); 
+      border: 1px solid rgba(56, 189, 248, 0.3); 
       border-radius: 12px;
-      padding: 12px; margin-bottom: 14px; font-size: 13px; line-height: 1.6;
+      padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.7;
     }
 
-    .auto-km-info { font-size: 11px; color: #38bdf8; margin-top: 4px; font-weight: 500; }
+    .auto-km-info { font-size: 11px; color: #38bdf8; margin-top: 5px; font-weight: 500; }
 
-    .form-group { margin-bottom: 12px; }
-    label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 5px; font-weight: 600; }
+    /* Form Layout Standardized */
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; font-weight: 600; }
     
     input, select {
-      width: 100%; padding: 12px; border-radius: 10px;
+      width: 100%; 
+      height: 48px;
+      padding: 0 14px; 
+      border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.15); 
-      background: rgba(13, 14, 27, 0.8); 
+      background: rgba(13, 14, 27, 0.85); 
       color: #ffffff;
-      font-size: 15px; outline: none; transition: 0.2s;
+      font-size: 14px; 
+      outline: none; 
+      transition: all 0.2s ease;
+      box-sizing: border-box;
     }
+
     input:focus, select:focus { 
       border-color: #f97316; 
-      box-shadow: 0 0 12px rgba(249, 115, 22, 0.4); 
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.35); 
     }
     input:read-only { 
-      background: rgba(30, 41, 59, 0.9); 
+      background: rgba(30, 41, 59, 0.85); 
       color: #38bdf8; 
-      font-weight: bold; 
+      font-weight: 700; 
       border-color: rgba(56, 189, 248, 0.3); 
     }
     
     button.btn-primary {
-      width: 100%; padding: 15px; margin-top: 8px; border-radius: 12px; border: none;
+      width: 100%; 
+      height: 50px; 
+      margin-top: 6px; 
+      border-radius: 12px; 
+      border: none;
       background: linear-gradient(135deg, #ea580c, #f97316);
-      color: white; font-size: 16px; font-weight: 700; cursor: pointer;
-      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.45);
-    }
-    button.btn-danger {
-      width: 100%; padding: 12px; margin-top: 8px; border-radius: 12px; border: none;
-      background: rgba(239, 68, 68, 0.85); color: white; font-size: 14px; font-weight: 600; cursor: pointer;
-      backdrop-filter: blur(4px);
+      color: white; 
+      font-size: 15px; 
+      font-weight: 700; 
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.4);
     }
     button:active { transform: scale(0.98); }
     button:disabled { background: #475569; opacity: 0.6; box-shadow: none; }
@@ -129,15 +163,24 @@
 </head>
 <body>
 
-  <div class="header">
-    <img src="0. CITA - Logo (o).png" alt="CITA Logo" class="app-logo" onerror="this.style.display='none';">
-    <h1>🚘 CITA Drive</h1>
-    <p>ប្រព័ន្ធកត់ត្រាការប្រើប្រាស់យានយន្ត</p>
+  <!-- Top Header -->
+  <div class="top-header">
+    <div class="header-left">
+      <img src="0. CITA - Logo (o).png" alt="CITA Logo" class="app-logo" onerror="this.style.display='none';">
+      <div class="header-titles">
+        <h1>CITA Drive</h1>
+        <p>ប្រព័ន្ធកត់ត្រាកុងទ័រកងយានយន្ត</p>
+      </div>
+    </div>
+    <div class="header-right" id="userHeaderBox" style="display: none;">
+      <div class="user-info-header" id="displayUserHeader">👤 -</div>
+      <button class="btn-edit-header" onclick="resetUser()">ប្តូរ</button>
+    </div>
   </div>
 
   <!-- 1. ទំព័រ Register អ្នកប្រើប្រាស់ -->
   <div id="userRegisterView" class="card">
-    <h3 style="margin-top:0; color:#f97316; font-size:16px; text-align:center;">👤 ចុះឈ្មោះចូលប្រើប្រាស់ (លើកដំបូង)</h3>
+    <h3 style="margin-top:0; color:#f97316; font-size:15px; text-align:center;">👤 ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង)</h3>
     <div class="form-group">
       <label>ឈ្មោះអ្នកបើកបរ (User Name)</label>
       <input type="text" id="regDriverName" placeholder="ឧ. សុខ ជា">
@@ -147,15 +190,8 @@
 
   <!-- 2. ទំព័រ START (ពេលចេញដំណើរ) -->
   <div id="startTripView" class="card">
-    <div class="user-banner">
-      <div class="user-info" id="displayUserStart">👤 អ្នកប្រើប្រាស់: -</div>
-      <button class="btn-edit" onclick="resetUser()">ប្តូរ User</button>
-    </div>
-
-    <div class="gps-status" id="gpsStatusStart">📍 កំពុងចាប់ទីតាំង GPS...</div>
-
     <div class="form-group">
-      <label>🚘 ជ្រើសរើសប្រភេទយន្ត</label>
+      <label>🚘 ជ្រើសរើសប្រភេทยានយន្ត</label>
       <select id="vehicleSelect" onchange="fetchLastKm()">
         <option value="Ford 2CJ-3946">🚘 Ford 2CJ-3946 (ឡាន)</option>
         <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
@@ -172,7 +208,7 @@
     <div class="form-group">
       <label>▶️ កុងទ័រដើម (Start KM)</label>
       <input type="number" id="startKm" placeholder="0">
-      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញទិន្នន័យ</div>
+      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញពី Sheet...</div>
     </div>
 
     <button class="btn-primary" onclick="startTrip()">▶️ ចាប់ផ្តើមដំណើរ (START TRIP)</button>
@@ -181,12 +217,6 @@
 
   <!-- 3. ទំព័រ END (ពេលមកដល់វិញ) -->
   <div id="endTripView" class="card">
-    <div class="user-banner">
-      <div class="user-info" id="displayUserEnd">👤 អ្នកប្រើប្រាស់: -</div>
-    </div>
-
-    <div class="gps-status" id="gpsStatusEnd">📍 កំពុងចាប់ទីតាំង GPS...</div>
-
     <div class="trip-summary-box">
       <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px;">🔴 កំពុងធ្វើដំណើរ (Trip in Progress)</div>
       <div>🚘 យានយន្ត: <b id="sumVehicle" style="color:#f97316;">-</b></div>
@@ -201,44 +231,45 @@
     </div>
 
     <div class="form-group">
-      <label>⛽ បរិមាណចាក់សាំង/លីត្រ (បើមាន)</label>
-      <input type="number" id="fuelLitres" placeholder="ឧ. 15 (ទុកទទេបើគ្មាន)">
+      <label>⛽ ចំនួនទឹកប្រាក់ចាក់សាំង (បើមាន)</label>
+      <input type="text" id="fuelAmount" placeholder="ឧ. 10$ ឬ 40000៛ (ទុកទទេបើគ្មាន)">
     </div>
 
     <button id="saveBtn" class="btn-primary" onclick="endTrip()">⏹️ បញ្ចប់ដំណើរ & រក្សាទុក (END TRIP)</button>
-    <button class="btn-danger" onclick="cancelTrip()">❌ បោះបង់ការធ្វើដំណើរនេះ</button>
     <div id="statusEnd" style="margin-top:10px; text-align:center; font-size:13px; font-weight:bold;"></div>
   </div>
 
   <script>
-    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyh1nVo49KfL_c05Z4NE85fbHUI9JTnpTQyhQXIZrX7vrueXWB1PQnwblAtG75fn9E/exec";
-    let currentLocation = "មិនទាន់ចាប់បានទីតាំង";
+    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script ត្រង់នេះ
+    const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
 
     window.onload = function() {
       checkAppStatus();
-      initGPS();
     };
 
     function checkAppStatus() {
       const savedUser = localStorage.getItem('cita_user_driver');
       const activeTrip = localStorage.getItem('cita_active_trip');
+      const headerUserBox = document.getElementById('userHeaderBox');
+      const displayUserHeader = document.getElementById('displayUserHeader');
 
       if (!savedUser) {
+        headerUserBox.style.display = 'none';
         showView('userRegisterView');
         return;
       }
 
+      displayUserHeader.innerText = "👤 " + savedUser;
+      headerUserBox.style.display = 'flex';
+
       if (activeTrip) {
         const tripData = JSON.parse(activeTrip);
-        document.getElementById('displayUserEnd').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
         document.getElementById('sumVehicle').innerText = tripData.vehicle;
         document.getElementById('sumPurpose').innerText = tripData.purpose;
         document.getElementById('sumStartKm').innerText = tripData.startKm;
         document.getElementById('sumStartTime').innerText = tripData.startTime;
         showView('endTripView');
       } else {
-        document.getElementById('displayUserStart').innerText = "👤 អ្នកប្រើប្រាស់: " + savedUser;
         showView('startTripView');
         fetchLastKm();
       }
@@ -283,7 +314,7 @@
             notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
             notice.style.color = "#4ade80";
           } else {
-            notice.innerText = "💡 មិនទាន់មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
+            notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
             notice.style.color = "#facc15";
             startKmInput.readOnly = false;
           }
@@ -293,25 +324,6 @@
           notice.style.color = "#ef4444";
           startKmInput.readOnly = false;
         });
-    }
-
-    function initGPS() {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            currentLocation = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-            const txt = `📍 GPS (Auto): ${currentLocation}`;
-            document.getElementById('gpsStatusStart').innerText = txt;
-            document.getElementById('gpsStatusEnd').innerText = txt;
-          },
-          (err) => {
-            const txt = "📍 ពុំអាចចាប់ទីតាំងបាន (សូមបើក Location GPS)";
-            document.getElementById('gpsStatusStart').innerText = txt;
-            document.getElementById('gpsStatusEnd').innerText = txt;
-          },
-          { enableHighAccuracy: true, timeout: 10000 }
-        );
-      }
     }
 
     function startTrip() {
@@ -332,8 +344,7 @@
         vehicle: vehicle,
         purpose: purpose,
         startKm: startKm,
-        startTime: timeStr,
-        startLocation: currentLocation
+        startTime: timeStr
       };
 
       localStorage.setItem('cita_active_trip', JSON.stringify(tripData));
@@ -345,7 +356,7 @@
     function endTrip() {
       const activeTrip = JSON.parse(localStorage.getItem('cita_active_trip'));
       const endKm = document.getElementById('endKm').value;
-      const fuelLitres = document.getElementById('fuelLitres').value;
+      const fuelAmount = document.getElementById('fuelAmount').value.trim();
       const status = document.getElementById('statusEnd');
       const btn = document.getElementById('saveBtn');
 
@@ -372,9 +383,7 @@
         startKm: activeTrip.startKm,
         endKm: endKm,
         startTime: activeTrip.startTime,
-        fuelLitres: fuelLitres,
-        startLocation: activeTrip.startLocation,
-        endLocation: currentLocation
+        fuelLitres: fuelAmount || "0"
       };
 
       fetch(SCRIPT_URL, {
@@ -390,7 +399,7 @@
         setTimeout(() => {
           btn.disabled = false;
           document.getElementById('endKm').value = '';
-          document.getElementById('fuelLitres').value = '';
+          document.getElementById('fuelAmount').value = '';
           status.innerText = '';
           checkAppStatus();
         }, 1500);
@@ -400,13 +409,6 @@
         status.innerText = "❌ មានបញ្ហា ព្យាយាមម្តងទៀត";
         btn.disabled = false;
       });
-    }
-
-    function cancelTrip() {
-      if (confirm("តើអ្នកប្រាកដជាចង់បោះបង់ការធ្វើដំណើរនេះមែនទេ?")) {
-        localStorage.removeItem('cita_active_trip');
-        checkAppStatus();
-      }
     }
   </script>
 </body>
