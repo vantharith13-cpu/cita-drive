@@ -10,8 +10,8 @@
   <style>
     :root {
       --bg-color: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --card-border: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(30, 41, 59, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
       --accent-color: #f97316;
       --accent-hover: #ea580c;
       --text-main: #f8fafc;
@@ -66,6 +66,7 @@
       width: 40px;
       height: 40px;
       border-radius: 50%;
+      object-fit: cover;
     }
 
     .brand-title {
@@ -84,7 +85,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       padding: 6px 12px;
       border-radius: 20px;
       font-size: 0.85rem;
@@ -126,9 +127,29 @@
       gap: 6px;
     }
 
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
     label {
       font-size: 0.85rem;
       color: var(--text-sub);
+    }
+
+    .sync-btn {
+      background: none;
+      border: none;
+      color: var(--accent-color);
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .sync-btn:active {
+      background: rgba(249, 115, 22, 0.15);
     }
 
     input, select {
@@ -141,12 +162,20 @@
       color: var(--text-main);
       font-size: 0.95rem;
       outline: none;
-      transition: all 0.2s;
+      transition: border-color 0.2s;
     }
 
     input:focus, select:focus {
       border-color: var(--accent-color);
     }
+
+    .km-hint {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      min-height: 18px;
+    }
+    .km-hint.ok { color: #22c55e; }
+    .km-hint.warn { color: #f59e0b; }
 
     /* Buttons */
     .btn {
@@ -206,7 +235,7 @@
     <!-- Header -->
     <header>
       <div class="brand">
-        <img src="logo.png" alt="CITA Logo" onerror="this.src='https://via.placeholder.com/40'">
+        <img src="logo.png" alt="CITA Logo" onerror="this.style.display='none'">
         <div>
           <div class="brand-title">CITA Drive</div>
           <div class="brand-sub">ប្រព័ន្ធកត់ត្រាការប្រើប្រាស់យានយន្ត</div>
@@ -248,8 +277,12 @@
       </div>
 
       <div class="form-group">
-        <label>▶️ កុងទ័រដើម (Start KM)</label>
-        <input type="number" id="startKmInput" placeholder="0">
+        <div class="label-row">
+          <label>▶️ កុងទ័រដើម (Start KM)</label>
+          <button type="button" class="sync-btn" onclick="fetchLastKm()">🔄 ទាញម្តងទៀត</button>
+        </div>
+        <input type="number" id="startKmInput" placeholder="0" inputmode="numeric">
+        <div id="kmHint" class="km-hint"></div>
       </div>
 
       <div id="statusStart" class="status-msg"></div>
@@ -284,7 +317,7 @@
 
       <div class="form-group">
         <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
-        <input type="number" id="endKmInput" placeholder="0">
+        <input type="number" id="endKmInput" placeholder="0" inputmode="numeric">
       </div>
 
       <div class="form-group">
@@ -307,6 +340,10 @@
     document.addEventListener("DOMContentLoaded", () => {
       checkAppStatus();
     });
+
+    function isUrlConfigured() {
+      return SCRIPT_URL && !SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbzHh3JoqBZ2pdeTYJrp75G1gDFW1ETu3EM6MiCQdqdHru7JXu60Dk80Q2Byer-OItt_/exec") && SCRIPT_URL.startsWith("https://script.google.com/");
+    }
 
     function checkAppStatus() {
       const user = localStorage.getItem("cita_user_name");
@@ -341,7 +378,7 @@
       } else {
         startCard.style.display = "flex";
         endCard.style.display = "none";
-        fetchLastKm();
+        fetchLastKm(); // ទាញលេខកុងទ័រចុងក្រោយស្វ័យប្រវត្តិភ្លាមៗ
       }
     }
 
@@ -359,22 +396,46 @@
       }
     }
 
+    // មុខងារទាញលេខកុងទ័រចុងក្រោយពី Google Sheet តាមប្រភេទយានយន្ត
     async function fetchLastKm() {
       const vehicle = document.getElementById("vehicleSelect").value;
       const startKmInput = document.getElementById("startKmInput");
-      startKmInput.placeholder = "កំពុងទាញយកទិន្នន័យ...";
-      
+      const kmHint = document.getElementById("kmHint");
+
+      if (!isUrlConfigured()) {
+        kmHint.className = "km-hint warn";
+        kmHint.innerText = "⚠️ មិនទាន់បានភ្ជាប់ SCRIPT_URL ក្នុងកូដ index.html នៅឡើយទេ!";
+        return;
+      }
+
+      startKmInput.value = "";
+      startKmInput.placeholder = "កំពុងទាញ...";
+      kmHint.className = "km-hint";
+      kmHint.innerText = `⏳ កំពុងទាញលេខកុងទ័រចុងក្រោយរបស់ ${vehicle}...`;
+
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}`);
+        const url = `${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}&t=${Date.now()}`;
+        const res = await fetch(url, { method: "GET", redirect: "follow" });
         const data = await res.json();
-        if (data && data.lastKm) {
-          startKmInput.value = data.lastKm;
+
+        if (data && data.status === "success") {
+          if (data.lastKm > 0) {
+            startKmInput.value = data.lastKm;
+            kmHint.className = "km-hint ok";
+            kmHint.innerText = `✅ ទាញយកស្វ័យប្រវត្តិពី Sheet (${data.lastKm} KM)`;
+          } else {
+            startKmInput.value = "";
+            startKmInput.placeholder = "0";
+            kmHint.className = "km-hint warn";
+            kmHint.innerText = "ℹ️ មិនទាន់មានទិន្នន័យចាស់ក្នុង Sheet ទេ សូមបញ្ចូលដោយដៃ";
+          }
         } else {
-          startKmInput.value = "";
-          startKmInput.placeholder = "0";
+          throw new Error(data.message || "Error");
         }
       } catch (e) {
         startKmInput.placeholder = "0";
+        kmHint.className = "km-hint warn";
+        kmHint.innerText = "⚠️ មិនអាចទាញលេខស្វ័យប្រវត្តិបានទេ (សូមពិនិត្យអ៊ីនធឺណិត ឬបញ្ចូលដោយដៃ)";
       }
     }
 
@@ -384,20 +445,19 @@
       const startKm = document.getElementById("startKmInput").value;
       const statusStart = document.getElementById("statusStart");
 
-      if (!purpose || !startKm) {
+      if (!purpose || startKm === "") {
         statusStart.className = "status-msg error";
         statusStart.innerText = "⚠️ សូមបញ្ចូល គោលបំណង និង កុងទ័រដើម!";
         return;
       }
 
-      // ទម្រង់ម៉ោង 12-hour AM/PM (ឧ. 9:45 AM)
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
       const tripData = {
         vehicle: vehicle,
         purpose: purpose,
-        startKm: startKm,
+        startKm: Number(startKm),
         startTime: timeStr
       };
 
@@ -413,10 +473,16 @@
       const statusEnd = document.getElementById("statusEnd");
       const endBtn = document.getElementById("endBtn");
 
+      if (!isUrlConfigured()) {
+        statusEnd.className = "status-msg error";
+        statusEnd.innerText = "⚠️ មិនទាន់បានដាក់ SCRIPT_URL ក្នុង index.html ទេ!";
+        return;
+      }
+
       const activeTrip = JSON.parse(localStorage.getItem("cita_active_trip"));
       const driverName = localStorage.getItem("cita_user_name");
 
-      if (!endKm) {
+      if (endKm === "") {
         statusEnd.className = "status-msg error";
         statusEnd.innerText = "⚠️ សូមបញ្ចូលកុងទ័របញ្ចប់!";
         return;
@@ -438,14 +504,14 @@
         purpose: activeTrip.purpose,
         startKm: activeTrip.startKm,
         startTime: activeTrip.startTime,
-        endKm: endKm,
+        endKm: Number(endKm),
         fuelLitres: fuelText || "0"
       };
 
       try {
         const response = await fetch(SCRIPT_URL, {
           method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          redirect: "follow",
           body: JSON.stringify(payload)
         });
 
@@ -457,7 +523,7 @@
           document.getElementById("fuelInput").value = "";
           statusEnd.className = "status-msg success";
           statusEnd.innerText = "✅ រក្សាទុកជោគជ័យ!";
-          
+
           setTimeout(() => {
             statusEnd.innerText = "";
             endBtn.disabled = false;
