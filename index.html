@@ -236,8 +236,9 @@
         <label>យានយន្ត</label>
         <select id="vehicleSelect" onchange="fetchLastKm()">
           <option value="Ford 2CJ-3946">Ford 2CJ-3946 (ឡាន)</option>
-          <option value="Mazda 2AB-1234">Mazda 2AB-1234 (ឡាន)</option>
-          <option value="Honda 1AB-5678">Honda 1AB-5678 (ម៉ូតូ)</option>
+          <option value="Ford 2CJ-7348">Ford 2CJ-7348 (ឡាន)</option>
+          <option value="KIA 2AQ-4141">KIA 2AQ-4141 (ឡាន)</option>
+          <option value="Honda Wave 1MP-9952">Honda Wave 1MP-9952 (ម៉ូតូ)</option>
         </select>
       </div>
 
@@ -288,7 +289,7 @@
 
       <div class="form-group">
         <label>⛽ ចំនួនទឹកប្រាក់ចាក់សាំង (បើមាន)</label>
-        <input type="text" id="fuelInput" placeholder="ឧ. 10$ ឬ 40000៛ (ទុកទំនេរប្រហើគ្មាន)">
+        <input type="text" id="fuelInput" placeholder="ឧ. 50$ ឬ 10000៛ (ទុកទំនេរបើគ្មាន)">
       </div>
 
       <div id="statusEnd" class="status-msg"></div>
@@ -301,7 +302,7 @@
 
   <script>
     // 🔗 ដាក់ Link Google Apps Script Web App URL របស់បងត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEgAelzrbGZj3EzGJsAhrwpx2hIrH10gMoyPggt3g5OycamGd6_2p_e9QEARB7j8qX/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec";
 
     document.addEventListener("DOMContentLoaded", () => {
       checkAppStatus();
@@ -389,7 +390,7 @@
         return;
       }
 
-      // កំណត់ Format ម៉ោងចេញដំណើរជា 12-hour AM/PM (ឧ. 5:43 PM)
+      // ទម្រង់ម៉ោង 12-hour AM/PM (ឧ. 9:45 AM)
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
@@ -463,7 +464,7 @@
             checkAppStatus();
           }, 1200);
         } else {
-          throw new Error(resData.message || " Error");
+          throw new Error(resData.message || "Error");
         }
       } catch (err) {
         statusEnd.className = "status-msg error";
