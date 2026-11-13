@@ -2,338 +2,396 @@
 <html lang="km">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="CITA Drive">
-  <meta name="theme-color" content="#0d0e1b">
-  <title>CITA Drive Tracker</title>
-  <link rel="apple-touch-icon" href="0. CITA - Logo (o).png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CITA Drive - ប្រព័ន្ធកត់ត្រាយានយន្ត</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent-color: #f97316;
+      --accent-hover: #ea580c;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --input-bg: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Kantumruy Pro', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0; 
-      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
-      background: linear-gradient(160deg, #0d0e1b 0%, #1a103c 40%, #0b132b 100%);
-      background-attachment: fixed;
-      color: #f8fafc;
-      display: flex; 
-      flex-direction: column; 
-      min-height: 100vh; 
-      justify-content: space-between;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
     }
 
-    .top-header {
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Header */
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 4px;
-      margin-bottom: 16px;
-      gap: 10px;
+      padding: 12px 16px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
     }
 
-    .header-left {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-    
-    .app-logo {
-      width: 55px;
-      height: 55px;
-      object-fit: contain;
+      gap: 12px;
     }
 
-    .header-titles h1 { 
-      font-size: 18px; 
-      color: #f97316; 
-      margin: 0; 
-      font-weight: 800; 
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 10px rgba(249, 115, 22, 0.4);
-    }
-    .header-titles p { 
-      font-size: 11px; 
-      color: #a5b4fc; 
-      margin: 2px 0 0 0; 
-      font-weight: 500; 
+    .brand img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
     }
 
-    .header-right {
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      line-height: 1.2;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .change-btn {
+      color: var(--accent-color);
+      cursor: pointer;
+      font-size: 0.75rem;
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(13, 14, 27, 0.85);
-      padding: 6px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      height: 55px;
     }
 
-    .user-info-header {
-      font-size: 12px;
-      color: #38bdf8;
-      font-weight: 700;
-      white-space: nowrap;
+    /* Form Elements */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .btn-edit-header {
-      background: #334155;
-      color: #cbd5e1;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 11px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    
-    .card {
-      background: rgba(22, 27, 46, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 18px;
-      padding: 18px 16px; 
-      border: 1px solid rgba(165, 180, 252, 0.15);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-      margin-bottom: 12px;
+    label {
+      font-size: 0.85rem;
+      color: var(--text-sub);
     }
 
-    .trip-summary-box {
-      background: rgba(13, 14, 27, 0.9); 
-      border: 1px solid rgba(56, 189, 248, 0.3); 
-      border-radius: 12px;
-      padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.7;
-    }
-
-    .auto-km-info { font-size: 11px; color: #38bdf8; margin-top: 5px; font-weight: 500; }
-
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; font-weight: 600; }
-    
     input, select {
-      width: 100%; 
+      width: 100%;
       height: 48px;
-      padding: 0 14px; 
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.15); 
-      background: rgba(13, 14, 27, 0.85); 
-      color: #ffffff;
-      font-size: 14px; 
-      outline: none; 
-      transition: all 0.2s ease;
-      box-sizing: border-box;
+      padding: 0 14px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s;
     }
 
-    input:focus, select:focus { 
-      border-color: #f97316; 
-      box-shadow: 0 0 12px rgba(249, 115, 22, 0.35); 
+    input:focus, select:focus {
+      border-color: var(--accent-color);
     }
-    input:read-only { 
-      background: rgba(30, 41, 59, 0.85); 
-      color: #38bdf8; 
-      font-weight: 700; 
-      border-color: rgba(56, 189, 248, 0.3); 
-    }
-    
-    button.btn-primary {
-      width: 100%; 
-      height: 50px; 
-      margin-top: 6px; 
-      border-radius: 12px; 
+
+    /* Buttons */
+    .btn {
+      height: 48px;
+      background: var(--accent-color);
+      color: white;
       border: none;
-      background: linear-gradient(135deg, #ea580c, #f97316);
-      color: white; 
-      font-size: 15px; 
-      font-weight: 700; 
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
     }
-    button:active { transform: scale(0.98); }
-    button:disabled { background: #475569; opacity: 0.6; box-shadow: none; }
 
-    #userRegisterView, #startTripView, #endTripView { display: none; }
+    .btn:active {
+      background: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Trip Active Info Box */
+    .active-info {
+      background: rgba(249, 115, 22, 0.1);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .active-info-item {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .status-msg {
+      font-size: 0.85rem;
+      text-align: center;
+      min-height: 20px;
+    }
+    .status-msg.error { color: #ef4444; }
+    .status-msg.success { color: #22c55e; }
   </style>
 </head>
 <body>
 
-  <div class="top-header">
-    <div class="header-left">
-      <img src="0. CITA - Logo (o).png" alt="CITA Logo" class="app-logo" onerror="this.style.display='none';">
-      <div class="header-titles">
-        <h1>CITA Drive</h1>
-        <p>ប្រព័ន្ធកត់ត្រាកុងទ័រកងយានយន្ត</p>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <img src="logo.png" alt="CITA Logo" onerror="this.src='https://via.placeholder.com/40'">
+        <div>
+          <div class="brand-title">CITA Drive</div>
+          <div class="brand-sub">ប្រព័ន្ធកត់ត្រាការប្រើប្រាស់យានយន្ត</div>
+        </div>
       </div>
-    </div>
-    <div class="header-right" id="userHeaderBox" style="display: none;">
-      <div class="user-info-header" id="displayUserHeader">👤 -</div>
-      <button class="btn-edit-header" onclick="resetUser()">ប្តូរ</button>
-    </div>
-  </div>
+      <div id="userBadge" class="user-badge" style="display: none;">
+        <span id="userNameDisplay">...</span>
+        <span class="change-btn" onclick="resetUser()">ប្តូរ</span>
+      </div>
+    </header>
 
-  <!-- 1. ទំព័រ Register អ្នកប្រើប្រាស់ -->
-  <div id="userRegisterView" class="card">
-    <h3 style="margin-top:0; color:#f97316; font-size:15px; text-align:center;">👤 ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង)</h3>
-    <div class="form-group">
-      <label>ឈ្មោះអ្នកបើកបរ (User Name)</label>
-      <input type="text" id="regDriverName" placeholder="ឧ. សុខ ជា">
-    </div>
-    <button class="btn-primary" onclick="registerUser()">រក្សាទុកឈ្មោះអ្នកប្រើប្រាស់</button>
-  </div>
-
-  <!-- 2. ទំព័រ START (ពេលចេញដំណើរ) -->
-  <div id="startTripView" class="card">
-    <div class="form-group">
-      <label>🚘 សូមជ្រើសរើសប្រភេទយានយន្ត</label>
-      <select id="vehicleSelect" onchange="fetchLastKm()">
-        <option value="Ford 2CJ-3946">🚘 Ford 2CJ-3946 (ឡាន)</option>
-        <option value="Ford 2CJ-7348">🚘 Ford 2CJ-7348 (ឡាន)</option>
-        <option value="KIA 2AQ-4141">🚘 KIA 2AQ-4141 (ឡាន)</option>
-        <option value="Honda Wave 1MP-9952">🛵 Honda Wave 1MP-9952 (ម៉ូតូ)</option>
-      </select>
+    <!-- 1. Form ចុះឈ្មោះអ្នកប្រើប្រាស់ (បង្ហាញតែលើកដំបូង) -->
+    <div id="userCard" class="card">
+      <div class="card-title">👤 ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង)</div>
+      <div class="form-group">
+        <label>ឈ្មោះអ្នកបើកបរ (User Name)</label>
+        <input type="text" id="userInput" placeholder="ឧ. សុខ ជា">
+      </div>
+      <button class="btn" onclick="saveUser()">រក្សាទុកឈ្មោះអ្នកប្រើប្រាស់</button>
     </div>
 
-    <div class="form-group">
-      <label>🎯 គោលបំណងធ្វើដំណើរ (Purpose)</label>
-      <input type="text" id="purpose" placeholder="ឧ. ចុះបេសកកម្ម / ដឹកទំនិញ">
+    <!-- 2. Form ចាប់ផ្តើមធ្វើដំណើរ (Start Trip) -->
+    <div id="startCard" class="card" style="display: none;">
+      <div class="card-title">🚘 ជ្រើសរើសប្រភេទយានយន្ត</div>
+      
+      <div class="form-group">
+        <label>យានយន្ត</label>
+        <select id="vehicleSelect" onchange="fetchLastKm()">
+          <option value="Ford 2CJ-3946">Ford 2CJ-3946 (ឡាន)</option>
+          <option value="Mazda 2AB-1234">Mazda 2AB-1234 (ឡាន)</option>
+          <option value="Honda 1AB-5678">Honda 1AB-5678 (ម៉ូតូ)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>🎯 គោលបំណងធ្វើដំណើរ (Purpose)</label>
+        <input type="text" id="purposeInput" placeholder="ឧ. ចុះបេសកកម្ម / ដឹកទំនិញ">
+      </div>
+
+      <div class="form-group">
+        <label>▶️ កុងទ័រដើម (Start KM)</label>
+        <input type="number" id="startKmInput" placeholder="0">
+      </div>
+
+      <div id="statusStart" class="status-msg"></div>
+
+      <button class="btn" onclick="startTrip()">
+        ▶️ ចាប់ផ្តើមដំណើរ (START TRIP)
+      </button>
     </div>
 
-    <div class="form-group">
-      <label>▶️ កុងទ័រដើម (Start KM)</label>
-      <input type="number" id="startKm" placeholder="0">
-      <div class="auto-km-info" id="startKmNotice">🔄 កំពុងទាញពី Sheet...</div>
+    <!-- 3. Form បញ្ចប់ការធ្វើដំណើរ (End Trip) -->
+    <div id="endCard" class="card" style="display: none;">
+      <div class="card-title">🔴 កំពុងធ្វើដំណើរ (Trip in Progress)</div>
+      
+      <div class="active-info">
+        <div class="active-info-item">
+          <span style="color:var(--text-sub)">យានយន្ត:</span>
+          <strong id="activeVehicle">...</strong>
+        </div>
+        <div class="active-info-item">
+          <span style="color:var(--text-sub)">គោលបំណង:</span>
+          <span id="activePurpose">...</span>
+        </div>
+        <div class="active-info-item">
+          <span style="color:var(--text-sub)">កុងទ័រដើម:</span>
+          <span><strong id="activeStartKm">0</strong> KM</span>
+        </div>
+        <div class="active-info-item">
+          <span style="color:var(--text-sub)">ម៉ោងចេញដំណើរ:</span>
+          <span id="activeStartTime">...</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
+        <input type="number" id="endKmInput" placeholder="0">
+      </div>
+
+      <div class="form-group">
+        <label>⛽ ចំនួនទឹកប្រាក់ចាក់សាំង (បើមាន)</label>
+        <input type="text" id="fuelInput" placeholder="ឧ. 10$ ឬ 40000៛ (ទុកទំនេរប្រហើគ្មាន)">
+      </div>
+
+      <div id="statusEnd" class="status-msg"></div>
+
+      <button id="endBtn" class="btn" onclick="endTrip()">
+        ⏹️ បញ្ចប់ដំណើរ & រក្សាទុក (END TRIP)
+      </button>
     </div>
-
-    <button class="btn-primary" onclick="startTrip()">▶️ ចាប់ផ្តើមដំណើរ (START TRIP)</button>
-    <div id="statusStart" style="margin-top:10px; text-align:center; font-size:13px; color:#ef4444; font-weight:bold;"></div>
-  </div>
-
-  <!-- 3. ទំព័រ END (ពេលមកដល់វិញ) -->
-  <div id="endTripView" class="card">
-    <div class="trip-summary-box">
-      <div style="color:#38bdf8; font-weight:bold; margin-bottom:4px;">🔴 កំពុងធ្វើដំណើរ (Trip in Progress)</div>
-      <div>🚘 យានយន្ត: <b id="sumVehicle" style="color:#f97316;">-</b></div>
-      <div>🎯 គោលបំណង: <b id="sumPurpose">-</b></div>
-      <div>▶️ កុងទ័រដើម: <b id="sumStartKm" style="color:#4ade80;">-</b> KM</div>
-      <div>⏱️ ម៉ោងចេញដំណើរ: <b id="sumStartTime">-</b></div>
-    </div>
-
-    <div class="form-group">
-      <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
-      <input type="number" id="endKm" placeholder="0">
-    </div>
-
-    <div class="form-group">
-      <label>⛽ ចំនួនទឹកប្រាក់ចាក់សាំង (បើមាន)</label>
-      <input type="text" id="fuelAmount" placeholder="ឧ. 10$ ឬ 40000៛ (ទុកទទេបើគ្មាន)">
-    </div>
-
-    <button id="saveBtn" class="btn-primary" onclick="endTrip()">⏹️ បញ្ចប់ដំណើរ & រក្សាទុក (END TRIP)</button>
-    <div id="statusEnd" style="margin-top:10px; text-align:center; font-size:13px; font-weight:bold;"></div>
   </div>
 
   <script>
-    // ⚠️ ជំនួស Web App Link របស់ Google Apps Script (ដែលបញ្ចប់ដោយ /exec) ត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_8F5v2eTGFtbBjWq3_NzDHF66ejLdSNDf6jcjh_M5vvsJBRRjjw9rvBHdhZxiH2RK/exec";
+    // 🔗 ដាក់ Link Google Apps Script Web App URL របស់បងត្រង់នេះ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEgAelzrbGZj3EzGJsAhrwpx2hIrH10gMoyPggt3g5OycamGd6_2p_e9QEARB7j8qX/exec";
 
-    window.onload = function() {
+    document.addEventListener("DOMContentLoaded", () => {
       checkAppStatus();
-    };
+    });
 
     function checkAppStatus() {
-      const savedUser = localStorage.getItem('cita_user_driver');
-      const activeTrip = localStorage.getItem('cita_active_trip');
-      const headerUserBox = document.getElementById('userHeaderBox');
-      const displayUserHeader = document.getElementById('displayUserHeader');
+      const user = localStorage.getItem("cita_user_name");
+      const activeTrip = localStorage.getItem("cita_active_trip");
 
-      if (!savedUser) {
-        headerUserBox.style.display = 'none';
-        showView('userRegisterView');
+      const userCard = document.getElementById("userCard");
+      const startCard = document.getElementById("startCard");
+      const endCard = document.getElementById("endCard");
+      const userBadge = document.getElementById("userBadge");
+
+      if (!user) {
+        userCard.style.display = "flex";
+        startCard.style.display = "none";
+        endCard.style.display = "none";
+        userBadge.style.display = "none";
         return;
       }
 
-      displayUserHeader.innerText = "👤 " + savedUser;
-      headerUserBox.style.display = 'flex';
+      userBadge.style.display = "flex";
+      document.getElementById("userNameDisplay").innerText = user;
+      userCard.style.display = "none";
 
       if (activeTrip) {
-        const tripData = JSON.parse(activeTrip);
-        document.getElementById('sumVehicle').innerText = tripData.vehicle;
-        document.getElementById('sumPurpose').innerText = tripData.purpose;
-        document.getElementById('sumStartKm').innerText = tripData.startKm;
-        document.getElementById('sumStartTime').innerText = tripData.startTime;
-        showView('endTripView');
+        const trip = JSON.parse(activeTrip);
+        document.getElementById("activeVehicle").innerText = trip.vehicle;
+        document.getElementById("activePurpose").innerText = trip.purpose;
+        document.getElementById("activeStartKm").innerText = trip.startKm;
+        document.getElementById("activeStartTime").innerText = trip.startTime;
+
+        startCard.style.display = "none";
+        endCard.style.display = "flex";
       } else {
-        showView('startTripView');
+        startCard.style.display = "flex";
+        endCard.style.display = "none";
         fetchLastKm();
       }
     }
 
-    function showView(viewId) {
-      document.getElementById('userRegisterView').style.display = 'none';
-      document.getElementById('startTripView').style.display = 'none';
-      document.getElementById('endTripView').style.display = 'none';
-      document.getElementById(viewId).style.display = 'block';
-    }
-
-    function registerUser() {
-      const name = document.getElementById('regDriverName').value.trim();
-      if (!name) { alert("សូមបញ្ចូលឈ្មោះ!"); return; }
-      localStorage.setItem('cita_user_driver', name);
+    function saveUser() {
+      const name = document.getElementById("userInput").value.trim();
+      if (!name) return alert("សូមបញ្ចូលឈ្មោះរបស់អ្នក!");
+      localStorage.setItem("cita_user_name", name);
       checkAppStatus();
     }
 
     function resetUser() {
-      if (confirm("តើអ្នកចង់ប្តូរឈ្មោះអ្នកប្រើប្រាស់មែនទេ?")) {
-        localStorage.removeItem('cita_user_driver');
+      if (confirm("តើបងចង់ប្តូរឈ្មោះអ្នកប្រើប្រាស់មែនទេ?")) {
+        localStorage.removeItem("cita_user_name");
         checkAppStatus();
       }
     }
 
-    function fetchLastKm() {
-      const vehicle = document.getElementById('vehicleSelect').value;
-      const startKmInput = document.getElementById('startKm');
-      const notice = document.getElementById('startKmNotice');
-
-      notice.innerText = "⏳ កំពុងទាញពី Sheet...";
-      startKmInput.value = "";
-      startKmInput.readOnly = false;
-
-      fetch(`${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.lastKm !== null && data.lastKm !== undefined) {
-            startKmInput.value = data.lastKm;
-            startKmInput.readOnly = true;
-            notice.innerText = "✅ ទាញស្វ័យប្រវត្តិពី Sheet";
-            notice.style.color = "#4ade80";
-          } else {
-            notice.innerText = "💡 គ្មានទិន្នន័យចាស់ទេ (សូមវាយបញ្ចូលកុងទ័រដើមដំបូង)";
-            notice.style.color = "#facc15";
-            startKmInput.readOnly = false;
-          }
-        })
-        .catch(err => {
-          notice.innerText = "⚠️ ពុំអាចទាញទិន្នន័យបាន (សូមវាយបញ្ចូលដោយដៃ)";
-          notice.style.color = "#ef4444";
-          startKmInput.readOnly = false;
-        });
+    async function fetchLastKm() {
+      const vehicle = document.getElementById("vehicleSelect").value;
+      const startKmInput = document.getElementById("startKmInput");
+      startKmInput.placeholder = "កំពុងទាញយកទិន្នន័យ...";
+      
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}`);
+        const data = await res.json();
+        if (data && data.lastKm) {
+          startKmInput.value = data.lastKm;
+        } else {
+          startKmInput.value = "";
+          startKmInput.placeholder = "0";
+        }
+      } catch (e) {
+        startKmInput.placeholder = "0";
+      }
     }
 
     function startTrip() {
-      const vehicle = document.getElementById('vehicleSelect').value;
-      const purpose = document.getElementById('purpose').value.trim();
-      const startKm = document.getElementById('startKm').value;
-      const statusErr = document.getElementById('statusStart');
+      const vehicle = document.getElementById("vehicleSelect").value;
+      const purpose = document.getElementById("purposeInput").value.trim();
+      const startKm = document.getElementById("startKmInput").value;
+      const statusStart = document.getElementById("statusStart");
 
       if (!purpose || !startKm) {
-        statusErr.innerText = "⚠️ សូមបញ្ចូល គោលបំណង និង កុងទ័រដើម!";
+        statusStart.className = "status-msg error";
+        statusStart.innerText = "⚠️ សូមបញ្ចូល គោលបំណង និង កុងទ័រដើម!";
         return;
       }
 
+      // កំណត់ Format ម៉ោងចេញដំណើរជា 12-hour AM/PM (ឧ. 5:43 PM)
       const now = new Date();
-      const timeStr = now.toLocaleTimeString('km-KH', { hour12: false });
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
       const tripData = {
         vehicle: vehicle,
@@ -342,68 +400,76 @@
         startTime: timeStr
       };
 
-      localStorage.setItem('cita_active_trip', JSON.stringify(tripData));
-      document.getElementById('purpose').value = '';
-      statusErr.innerText = '';
+      localStorage.setItem("cita_active_trip", JSON.stringify(tripData));
+      document.getElementById("purposeInput").value = "";
+      statusStart.innerText = "";
       checkAppStatus();
     }
 
-    function endTrip() {
-      const activeTrip = JSON.parse(localStorage.getItem('cita_active_trip'));
-      const endKm = document.getElementById('endKm').value;
-      const fuelAmount = document.getElementById('fuelAmount').value.trim();
-      const status = document.getElementById('statusEnd');
-      const btn = document.getElementById('saveBtn');
+    async function endTrip() {
+      const endKm = document.getElementById("endKmInput").value;
+      const fuelText = document.getElementById("fuelInput").value.trim();
+      const statusEnd = document.getElementById("statusEnd");
+      const endBtn = document.getElementById("endBtn");
+
+      const activeTrip = JSON.parse(localStorage.getItem("cita_active_trip"));
+      const driverName = localStorage.getItem("cita_user_name");
 
       if (!endKm) {
-        status.style.color = '#ef4444';
-        status.innerText = "⚠️ សូមបញ្ចូលកុងទ័របញ្ចប់!";
+        statusEnd.className = "status-msg error";
+        statusEnd.innerText = "⚠️ សូមបញ្ចូលកុងទ័របញ្ចប់!";
         return;
       }
 
       if (Number(endKm) < Number(activeTrip.startKm)) {
-        status.style.color = '#ef4444';
-        status.innerText = "⚠️ កុងទ័របញ្ចប់ មិនអាចតូចជាងកុងទ័រដើមទេ!";
+        statusEnd.className = "status-msg error";
+        statusEnd.innerText = "⚠️ កុងទ័របញ្ចប់មិនអាចតូចជាងកុងទ័រដើមឡើយ!";
         return;
       }
 
-      btn.disabled = true;
-      status.style.color = '#38bdf8';
-      status.innerText = "⏳ កំពុងផ្ញើទិន្នន័យចូល Sheet...";
+      endBtn.disabled = true;
+      statusEnd.className = "status-msg";
+      statusEnd.innerText = "⏳ កំពុងផ្ញើទិន្នន័យទៅ Google Sheet...";
 
       const payload = {
-        driver: localStorage.getItem('cita_user_driver'),
+        driver: driverName,
         vehicle: activeTrip.vehicle,
         purpose: activeTrip.purpose,
         startKm: activeTrip.startKm,
-        endKm: endKm,
         startTime: activeTrip.startTime,
-        fuelLitres: fuelAmount || "0"
+        endKm: endKm,
+        fuelLitres: fuelText || "0"
       };
 
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      })
-      .then(() => {
-        status.style.color = '#4ade80';
-        status.innerText = "✅ រក្សាទុកទិន្នន័យចូល Sheet ជោគជ័យ!";
-        localStorage.removeItem('cita_active_trip');
-        setTimeout(() => {
-          btn.disabled = false;
-          document.getElementById('endKm').value = '';
-          document.getElementById('fuelAmount').value = '';
-          status.innerText = '';
-          checkAppStatus();
-        }, 1500);
-      })
-      .catch(err => {
-        status.style.color = '#ef4444';
-        status.innerText = "❌ មានបញ្ហា ព្យាយាមម្តងទៀត";
-        btn.disabled = false;
-      });
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const resData = await response.json();
+
+        if (resData.result === "success") {
+          localStorage.removeItem("cita_active_trip");
+          document.getElementById("endKmInput").value = "";
+          document.getElementById("fuelInput").value = "";
+          statusEnd.className = "status-msg success";
+          statusEnd.innerText = "✅ រក្សាទុកជោគជ័យ!";
+          
+          setTimeout(() => {
+            statusEnd.innerText = "";
+            endBtn.disabled = false;
+            checkAppStatus();
+          }, 1200);
+        } else {
+          throw new Error(resData.message || " Error");
+        }
+      } catch (err) {
+        statusEnd.className = "status-msg error";
+        statusEnd.innerText = "❌ មានបញ្ហា៖ " + err.message;
+        endBtn.disabled = false;
+      }
     }
   </script>
 </body>
