@@ -10,7 +10,7 @@
   <style>
     :root {
       --bg-color: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.75);
+      --card-bg: rgba(30, 41, 59, 0.8);
       --card-border: rgba(255, 255, 255, 0.12);
       --accent-color: #f97316;
       --accent-hover: #ea580c;
@@ -44,7 +44,6 @@
       gap: 16px;
     }
 
-    /* Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -100,7 +99,6 @@
       margin-left: 4px;
     }
 
-    /* Cards */
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -120,7 +118,6 @@
       gap: 8px;
     }
 
-    /* Form Elements */
     .form-group {
       display: flex;
       flex-direction: column;
@@ -139,17 +136,17 @@
     }
 
     .sync-btn {
-      background: none;
-      border: none;
+      background: rgba(249, 115, 22, 0.14);
+      border: 1px solid rgba(249, 115, 22, 0.35);
       color: var(--accent-color);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       cursor: pointer;
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 4px 10px;
+      border-radius: 8px;
     }
 
     .sync-btn:active {
-      background: rgba(249, 115, 22, 0.15);
+      background: rgba(249, 115, 22, 0.28);
     }
 
     input, select {
@@ -169,15 +166,15 @@
       border-color: var(--accent-color);
     }
 
-    .km-hint {
+    .hint-text {
       font-size: 0.78rem;
       color: var(--text-sub);
       min-height: 18px;
+      line-height: 1.4;
     }
-    .km-hint.ok { color: #22c55e; }
-    .km-hint.warn { color: #f59e0b; }
+    .hint-text.ok { color: #22c55e; }
+    .hint-text.warn { color: #f59e0b; }
 
-    /* Buttons */
     .btn {
       height: 48px;
       background: var(--accent-color);
@@ -203,7 +200,6 @@
       cursor: not-allowed;
     }
 
-    /* Trip Active Info Box */
     .active-info {
       background: rgba(249, 115, 22, 0.1);
       border: 1px solid rgba(249, 115, 22, 0.3);
@@ -247,7 +243,7 @@
       </div>
     </header>
 
-    <!-- 1. Form ចុះឈ្មោះអ្នកប្រើប្រាស់ (បង្ហាញតែលើកដំបូង) -->
+    <!-- 1. Form ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង) -->
     <div id="userCard" class="card">
       <div class="card-title">👤 ចុះឈ្មោះអ្នកប្រើប្រាស់ (លើកដំបូង)</div>
       <div class="form-group">
@@ -282,7 +278,7 @@
           <button type="button" class="sync-btn" onclick="fetchLastKm()">🔄 ទាញម្តងទៀត</button>
         </div>
         <input type="number" id="startKmInput" placeholder="0" inputmode="numeric">
-        <div id="kmHint" class="km-hint"></div>
+        <div id="kmHint" class="hint-text"></div>
       </div>
 
       <div id="statusStart" class="status-msg"></div>
@@ -317,7 +313,8 @@
 
       <div class="form-group">
         <label>⏹️ កុងទ័របញ្ចប់ (End KM)</label>
-        <input type="number" id="endKmInput" placeholder="0" inputmode="numeric">
+        <input type="number" id="endKmInput" placeholder="0" inputmode="numeric" oninput="updateDistancePreview()">
+        <div id="distanceHint" class="hint-text"></div>
       </div>
 
       <div class="form-group">
@@ -334,15 +331,24 @@
   </div>
 
   <script>
-    // 🔗 ដាក់ Link Google Apps Script Web App URL របស់បងត្រង់នេះ
-    const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec";
+    // =========================================================================
+    // 🔗 ដាក់ Link Google Apps Script Web App URL របស់បងត្រង់នេះ (បញ្ចប់ដោយ /exec)
+    // =========================================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHh3JoqBZ2pdeTYJrp75G1gDFW1ETu3EM6MiCQdqdHru7JXu60Dk80Q2Byer-OItt_/exec";
 
     document.addEventListener("DOMContentLoaded", () => {
       checkAppStatus();
     });
 
-    function isUrlConfigured() {
-      return SCRIPT_URL && !SCRIPT_URL.includes("https://script.google.com/macros/s/AKfycbzHh3JoqBZ2pdeTYJrp75G1gDFW1ETu3EM6MiCQdqdHru7JXu60Dk80Q2Byer-OItt_/exec") && SCRIPT_URL.startsWith("https://script.google.com/");
+    function getCleanUrl() {
+      return (SCRIPT_URL || "").trim();
+    }
+
+    function isUrlValid() {
+      const url = getCleanUrl();
+      return url.startsWith("https://script.google.com/") &&
+             !url.includes("YOUR_SCRIPT_ID_HERE") &&
+             url.endsWith("/exec");
     }
 
     function checkAppStatus() {
@@ -372,13 +378,14 @@
         document.getElementById("activePurpose").innerText = trip.purpose;
         document.getElementById("activeStartKm").innerText = trip.startKm;
         document.getElementById("activeStartTime").innerText = trip.startTime;
+        document.getElementById("distanceHint").innerText = "";
 
         startCard.style.display = "none";
         endCard.style.display = "flex";
       } else {
         startCard.style.display = "flex";
         endCard.style.display = "none";
-        fetchLastKm(); // ទាញលេខកុងទ័រចុងក្រោយស្វ័យប្រវត្តិភ្លាមៗ
+        fetchLastKm();
       }
     }
 
@@ -396,46 +403,56 @@
       }
     }
 
-    // មុខងារទាញលេខកុងទ័រចុងក្រោយពី Google Sheet តាមប្រភេទយានយន្ត
+    // ទាញលេខកុងទ័រចុងក្រោយពី Google Sheet តាមប្រភេទយានយន្ត
     async function fetchLastKm() {
       const vehicle = document.getElementById("vehicleSelect").value;
       const startKmInput = document.getElementById("startKmInput");
       const kmHint = document.getElementById("kmHint");
 
-      if (!isUrlConfigured()) {
-        kmHint.className = "km-hint warn";
-        kmHint.innerText = "⚠️ មិនទាន់បានភ្ជាប់ SCRIPT_URL ក្នុងកូដ index.html នៅឡើយទេ!";
+      if (!isUrlValid()) {
+        kmHint.className = "hint-text warn";
+        kmHint.innerText = "⚠️ មិនទាន់បានជំនួស SCRIPT_URL ក្នុងកូដ index.html ទេ";
         return;
       }
 
       startKmInput.value = "";
       startKmInput.placeholder = "កំពុងទាញ...";
-      kmHint.className = "km-hint";
-      kmHint.innerText = `⏳ កំពុងទាញលេខកុងទ័រចុងក្រោយរបស់ ${vehicle}...`;
+      kmHint.className = "hint-text";
+      kmHint.innerText = `⏳ កំពុងទាញលេខកុងទ័ររបស់ ${vehicle}...`;
 
       try {
-        const url = `${SCRIPT_URL}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}&t=${Date.now()}`;
-        const res = await fetch(url, { method: "GET", redirect: "follow" });
-        const data = await res.json();
+        const requestUrl = `${getCleanUrl()}?action=getLastKm&vehicle=${encodeURIComponent(vehicle)}&t=${Date.now()}`;
+        const response = await fetch(requestUrl, {
+          method: "GET",
+          redirect: "follow",
+          credentials: "omit"
+        });
+
+        const rawText = await response.text();
+        if (rawText.trim().startsWith("<")) {
+          throw new Error("សិទ្ធិ Deploy មិនទាន់បើកជា Anyone ទេ");
+        }
+
+        const data = JSON.parse(rawText);
 
         if (data && data.status === "success") {
           if (data.lastKm > 0) {
             startKmInput.value = data.lastKm;
-            kmHint.className = "km-hint ok";
+            kmHint.className = "hint-text ok";
             kmHint.innerText = `✅ ទាញយកស្វ័យប្រវត្តិពី Sheet (${data.lastKm} KM)`;
           } else {
             startKmInput.value = "";
             startKmInput.placeholder = "0";
-            kmHint.className = "km-hint warn";
+            kmHint.className = "hint-text warn";
             kmHint.innerText = "ℹ️ មិនទាន់មានទិន្នន័យចាស់ក្នុង Sheet ទេ សូមបញ្ចូលដោយដៃ";
           }
         } else {
-          throw new Error(data.message || "Error");
+          throw new Error(data.message || "ទិន្នន័យមិនត្រឹមត្រូវ");
         }
-      } catch (e) {
+      } catch (err) {
         startKmInput.placeholder = "0";
-        kmHint.className = "km-hint warn";
-        kmHint.innerText = "⚠️ មិនអាចទាញលេខស្វ័យប្រវត្តិបានទេ (សូមពិនិត្យអ៊ីនធឺណិត ឬបញ្ចូលដោយដៃ)";
+        kmHint.className = "hint-text warn";
+        kmHint.innerText = `⚠️ មិនអាចទាញលេខបានទេ៖ ${err.message}`;
       }
     }
 
@@ -452,7 +469,11 @@
       }
 
       const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const timeStr = now.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      });
 
       const tripData = {
         vehicle: vehicle,
@@ -467,15 +488,35 @@
       checkAppStatus();
     }
 
+    function updateDistancePreview() {
+      const endVal = document.getElementById("endKmInput").value;
+      const distanceHint = document.getElementById("distanceHint");
+      const activeTrip = JSON.parse(localStorage.getItem("cita_active_trip") || "{}");
+
+      if (endVal === "" || activeTrip.startKm === undefined) {
+        distanceHint.innerText = "";
+        return;
+      }
+
+      const diff = Number(endVal) - Number(activeTrip.startKm);
+      if (diff >= 0) {
+        distanceHint.className = "hint-text ok";
+        distanceHint.innerText = `📏 ចម្ងាយផ្លូវសរុប៖ ${diff} KM`;
+      } else {
+        distanceHint.className = "hint-text warn";
+        distanceHint.innerText = "⚠️ កុងទ័របញ្ចប់តូចជាងកុងទ័រដើម";
+      }
+    }
+
     async function endTrip() {
       const endKm = document.getElementById("endKmInput").value;
       const fuelText = document.getElementById("fuelInput").value.trim();
       const statusEnd = document.getElementById("statusEnd");
       const endBtn = document.getElementById("endBtn");
 
-      if (!isUrlConfigured()) {
+      if (!isUrlValid()) {
         statusEnd.className = "status-msg error";
-        statusEnd.innerText = "⚠️ មិនទាន់បានដាក់ SCRIPT_URL ក្នុង index.html ទេ!";
+        statusEnd.innerText = "⚠️ Link SCRIPT_URL មិនទាន់ត្រឹមត្រូវ!";
         return;
       }
 
@@ -509,13 +550,20 @@
       };
 
       try {
-        const response = await fetch(SCRIPT_URL, {
+        // ផ្ញើជា plain string ដោយមិនបន្ថែម custom headers ដើម្បីការពារ CORS error លើ Safari/iOS
+        const response = await fetch(getCleanUrl(), {
           method: "POST",
           redirect: "follow",
+          credentials: "omit",
           body: JSON.stringify(payload)
         });
 
-        const resData = await response.json();
+        const rawText = await response.text();
+        if (rawText.trim().startsWith("<")) {
+          throw new Error("សិទ្ធិ Deploy មិនទាន់បើកជា Anyone ទេ");
+        }
+
+        const resData = JSON.parse(rawText);
 
         if (resData.result === "success") {
           localStorage.removeItem("cita_active_trip");
